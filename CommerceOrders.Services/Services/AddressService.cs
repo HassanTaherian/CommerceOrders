@@ -1,10 +1,10 @@
 ﻿using CommerceOrders.Contracts.UI;
 using CommerceOrders.Contracts.UI.Address;
+using CommerceOrders.Services.Abstractions;
 using Domain.Exceptions;
 using Domain.Repositories;
-using Services.Abstractions;
 
-namespace Services.Services
+namespace CommerceOrders.Services.Services
 {
     public sealed class AddressService : IAddressService
     {

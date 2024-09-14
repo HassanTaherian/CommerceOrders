@@ -1,7 +1,7 @@
 ﻿using CommerceOrders.Contracts.UI.Cart;
 using Domain.ValueObjects;
 
-namespace Services.Abstractions
+namespace CommerceOrders.Services.Abstractions
 {
     public interface IProductService
     {

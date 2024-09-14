@@ -1,6 +1,6 @@
 ﻿using CommerceOrders.Contracts.UI.Discount;
 using Microsoft.AspNetCore.Mvc;
-using Services.Abstractions;
+using CommerceOrders.Services.Abstractions;
 
 namespace CommerceOrders.Api.Controllers
 {

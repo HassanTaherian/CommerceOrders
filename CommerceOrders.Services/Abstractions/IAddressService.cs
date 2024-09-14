@@ -1,7 +1,7 @@
 ﻿using CommerceOrders.Contracts.UI;
 using CommerceOrders.Contracts.UI.Address;
 
-namespace Services.Abstractions
+namespace CommerceOrders.Services.Abstractions
 {
     public interface IAddressService
     {

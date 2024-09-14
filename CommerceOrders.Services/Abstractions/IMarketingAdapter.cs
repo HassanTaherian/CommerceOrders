@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.ValueObjects;
 
-namespace Services.External;
+namespace CommerceOrders.Services.External;
 
 public interface IMarketingAdapter
 {

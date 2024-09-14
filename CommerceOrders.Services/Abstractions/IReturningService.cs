@@ -3,7 +3,7 @@ using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Returning;
 using CommerceOrders.Contracts.UI.Watch;
 
-namespace Services.Abstractions;
+namespace CommerceOrders.Services.Abstractions;
 
 public interface IReturningService
 {

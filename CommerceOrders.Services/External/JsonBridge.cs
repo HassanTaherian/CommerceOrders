@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Services.External
+namespace CommerceOrders.Services.External
 {
     public class JsonBridge<TIn,TOut>
     {

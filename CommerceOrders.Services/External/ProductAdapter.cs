@@ -1,9 +1,9 @@
 ﻿using CommerceOrders.Contracts.Product;
+using CommerceOrders.Services.Abstractions;
 using Domain.Entities;
 using Domain.ValueObjects;
-using Services.Abstractions;
 
-namespace Services.External;
+namespace CommerceOrders.Services.External;
 
 public class ProductAdapter : IProductAdapter
 {

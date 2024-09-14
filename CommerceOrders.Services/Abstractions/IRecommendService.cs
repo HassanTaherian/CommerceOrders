@@ -2,7 +2,7 @@
 using CommerceOrders.Contracts.UI.Recommendation;
 using Domain.Entities;
 
-namespace Services.Abstractions
+namespace CommerceOrders.Services.Abstractions
 {
     public interface IRecommendService
     {

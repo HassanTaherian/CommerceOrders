@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.ValueObjects;
 
-namespace Services.Abstractions;
+namespace CommerceOrders.Services.Abstractions;
 
 public interface IProductAdapter
 {

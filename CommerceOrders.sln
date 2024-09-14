@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{755D1DAE-90F6-4F4F-95E8-8CE2A36FBD69}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{B5AEB71F-757E-4032-A700-7C80F0699040}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceOrders.Services", "CommerceOrders.Services\CommerceOrders.Services.csproj", "{B5AEB71F-757E-4032-A700-7C80F0699040}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceOrders.Contracts", "CommerceOrders.Contracts\CommerceOrders.Contracts.csproj", "{6D2DC2AE-3D04-42D7-908C-A53B4EA3889A}"
 EndProject

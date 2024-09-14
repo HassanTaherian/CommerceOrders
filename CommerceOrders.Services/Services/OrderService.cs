@@ -1,14 +1,14 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Checkout;
+using CommerceOrders.Services.Abstractions;
+using CommerceOrders.Services.External;
+using CommerceOrders.Services.Mappers;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.ValueObjects;
-using Services.Abstractions;
-using Services.External;
-using Services.Mappers;
 
-namespace Services.Services
+namespace CommerceOrders.Services.Services
 {
     public class OrderService : IOrderService
     {

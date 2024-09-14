@@ -2,7 +2,7 @@
 using CommerceOrders.Contracts.UI.Order.Checkout;
 using CommerceOrders.Contracts.UI.Watch;
 
-namespace Services.Abstractions
+namespace CommerceOrders.Services.Abstractions
 {
     public interface IOrderService
     {

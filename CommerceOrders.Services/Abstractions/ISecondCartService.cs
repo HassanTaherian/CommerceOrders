@@ -1,7 +1,7 @@
 ﻿using CommerceOrders.Contracts.UI.SecondCart;
 using Domain.Entities;
 
-namespace Services.Abstractions
+namespace CommerceOrders.Services.Abstractions
 {
     public interface ISecondCartService
     {

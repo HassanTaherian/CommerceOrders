@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Services.External
+namespace CommerceOrders.Services.External
 {
     public class HttpProvider : IHttpProvider
     {

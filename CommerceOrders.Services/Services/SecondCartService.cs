@@ -1,11 +1,11 @@
 ﻿using CommerceOrders.Contracts.UI.SecondCart;
+using CommerceOrders.Services.Abstractions;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.ValueObjects;
-using Services.Abstractions;
 
-namespace Services.Services
+namespace CommerceOrders.Services.Services
 {
     public sealed class SecondCartService : ISecondCartService
     {

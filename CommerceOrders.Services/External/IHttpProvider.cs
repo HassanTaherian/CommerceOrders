@@ -1,4 +1,4 @@
-﻿namespace Services.External
+﻿namespace CommerceOrders.Services.External
 {
     public interface IHttpProvider
     {

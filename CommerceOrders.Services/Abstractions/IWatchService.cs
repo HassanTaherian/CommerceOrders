@@ -1,6 +1,6 @@
 ﻿using CommerceOrders.Contracts.UI.Watch;
 
-namespace Services.Abstractions
+namespace CommerceOrders.Services.Abstractions
 {
     public interface IWatchService
     {

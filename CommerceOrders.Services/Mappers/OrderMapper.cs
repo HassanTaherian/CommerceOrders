@@ -1,7 +1,7 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using Domain.Entities;
 
-namespace Services.Mappers;
+namespace CommerceOrders.Services.Mappers;
 
 public class OrderMapper
 {

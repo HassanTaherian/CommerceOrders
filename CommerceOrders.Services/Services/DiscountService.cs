@@ -1,12 +1,12 @@
 ﻿using CommerceOrders.Contracts.Discount;
 using CommerceOrders.Contracts.UI.Discount;
+using CommerceOrders.Services.Abstractions;
+using CommerceOrders.Services.External;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
-using Services.Abstractions;
-using Services.External;
 
-namespace Services.Services
+namespace CommerceOrders.Services.Services
 {
     public sealed class DiscountService : IDiscountService
     {

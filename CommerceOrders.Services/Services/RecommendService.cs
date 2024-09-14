@@ -1,13 +1,13 @@
 ﻿using CommerceOrders.Contracts.Product;
 using CommerceOrders.Contracts.UI.Recommendation;
+using CommerceOrders.Services.Abstractions;
+using CommerceOrders.Services.External;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.ValueObjects;
-using Services.Abstractions;
-using Services.External;
 
-namespace Services.Services
+namespace CommerceOrders.Services.Services
 {
     public class RecommendService : IRecommendService
     {
