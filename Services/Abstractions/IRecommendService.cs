@@ -1,5 +1,5 @@
-﻿using Contracts.Product;
-using Contracts.UI.Recommendation;
+﻿using CommerceOrders.Contracts.Product;
+using CommerceOrders.Contracts.UI.Recommendation;
 using Domain.Entities;
 
 namespace Services.Abstractions

@@ -1,4 +1,4 @@
-﻿using Contracts.Product;
+﻿using CommerceOrders.Contracts.Product;
 using Domain.Entities;
 using Domain.ValueObjects;
 using Services.Abstractions;

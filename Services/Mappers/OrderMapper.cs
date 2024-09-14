@@ -1,4 +1,4 @@
-﻿using Contracts.UI.Invoice;
+﻿using CommerceOrders.Contracts.UI.Invoice;
 using Domain.Entities;
 
 namespace Services.Mappers;

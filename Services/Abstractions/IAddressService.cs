@@ -1,5 +1,5 @@
-﻿using Contracts.UI;
-using Contracts.UI.Address;
+﻿using CommerceOrders.Contracts.UI;
+using CommerceOrders.Contracts.UI.Address;
 
 namespace Services.Abstractions
 {

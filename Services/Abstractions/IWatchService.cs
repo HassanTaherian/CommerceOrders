@@ -1,4 +1,4 @@
-﻿using Contracts.UI.Watch;
+﻿using CommerceOrders.Contracts.UI.Watch;
 
 namespace Services.Abstractions
 {

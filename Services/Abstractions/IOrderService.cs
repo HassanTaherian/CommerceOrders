@@ -1,6 +1,6 @@
-﻿using Contracts.UI.Invoice;
-using Contracts.UI.Order.Checkout;
-using Contracts.UI.Watch;
+﻿using CommerceOrders.Contracts.UI.Invoice;
+using CommerceOrders.Contracts.UI.Order.Checkout;
+using CommerceOrders.Contracts.UI.Watch;
 
 namespace Services.Abstractions
 {

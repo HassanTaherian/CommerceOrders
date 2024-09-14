@@ -1,4 +1,4 @@
-﻿using Contracts.Marketing.Send;
+﻿using CommerceOrders.Contracts.Marketing.Send;
 using Domain.Entities;
 using Domain.ValueObjects;
 

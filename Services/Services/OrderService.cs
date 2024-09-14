@@ -1,5 +1,5 @@
-﻿using Contracts.UI.Invoice;
-using Contracts.UI.Order.Checkout;
+﻿using CommerceOrders.Contracts.UI.Invoice;
+using CommerceOrders.Contracts.UI.Order.Checkout;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;

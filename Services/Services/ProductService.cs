@@ -1,4 +1,4 @@
-﻿using Contracts.UI.Cart;
+﻿using CommerceOrders.Contracts.UI.Cart;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;

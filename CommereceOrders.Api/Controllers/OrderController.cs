@@ -1,4 +1,4 @@
-﻿using Contracts.UI.Order.Checkout;
+﻿using CommerceOrders.Contracts.UI.Order.Checkout;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 

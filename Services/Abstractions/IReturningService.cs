@@ -1,7 +1,7 @@
-﻿using Contracts.UI;
-using Contracts.UI.Invoice;
-using Contracts.UI.Order.Returning;
-using Contracts.UI.Watch;
+﻿using CommerceOrders.Contracts.UI;
+using CommerceOrders.Contracts.UI.Invoice;
+using CommerceOrders.Contracts.UI.Order.Returning;
+using CommerceOrders.Contracts.UI.Watch;
 
 namespace Services.Abstractions;
 

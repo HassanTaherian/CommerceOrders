@@ -1,5 +1,5 @@
-﻿using Contracts.Discount;
-using Contracts.UI.Discount;
+﻿using CommerceOrders.Contracts.Discount;
+using CommerceOrders.Contracts.UI.Discount;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;

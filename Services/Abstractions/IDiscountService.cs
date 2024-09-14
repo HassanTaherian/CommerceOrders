@@ -1,5 +1,5 @@
-﻿using Contracts.UI;
-using Contracts.UI.Discount;
+﻿using CommerceOrders.Contracts.UI;
+using CommerceOrders.Contracts.UI.Discount;
 
 namespace Services.Abstractions
 {

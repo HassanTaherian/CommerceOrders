@@ -1,4 +1,4 @@
-﻿using Contracts.UI.Cart;
+﻿using CommerceOrders.Contracts.UI.Cart;
 using Domain.ValueObjects;
 
 namespace Services.Abstractions

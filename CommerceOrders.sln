@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{B5AEB71F-757E-4032-A700-7C80F0699040}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Contracts.csproj", "{6D2DC2AE-3D04-42D7-908C-A53B4EA3889A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceOrders.Contracts", "CommerceOrders.Contracts\CommerceOrders.Contracts.csproj", "{6D2DC2AE-3D04-42D7-908C-A53B4EA3889A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Presistance\Persistence.csproj", "{AD6AD42A-FB30-4346-8BB6-67140191C7BF}"
 EndProject

@@ -1,4 +1,4 @@
-﻿using Contracts.UI.Address;
+﻿using CommerceOrders.Contracts.UI.Address;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 

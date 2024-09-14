@@ -1,4 +1,4 @@
-﻿using Contracts.UI.SecondCart;
+﻿using CommerceOrders.Contracts.UI.SecondCart;
 using Domain.Entities;
 
 namespace Services.Abstractions

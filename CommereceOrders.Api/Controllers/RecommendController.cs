@@ -1,4 +1,4 @@
-﻿using Contracts.UI.Recommendation;
+﻿using CommerceOrders.Contracts.UI.Recommendation;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 
