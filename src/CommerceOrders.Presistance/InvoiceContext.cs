@@ -2,21 +2,20 @@
 using CommerceOrders.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace CommerceOrders.Persistence
+namespace CommerceOrders.Persistence;
+
+public class InvoiceContext : DbContext
 {
-    public class InvoiceContext : DbContext
+    public InvoiceContext(DbContextOptions options) : base(options)
     {
-        public InvoiceContext(DbContextOptions options) : base(options)
-        {
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new InvoiceConfig());
-            modelBuilder.ApplyConfiguration(new InvoiceItemConfig());
-        }
-
-        public virtual DbSet<Invoice> Invoices { get; set; }
-        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new InvoiceConfig());
+        modelBuilder.ApplyConfiguration(new InvoiceItemConfig());
+    }
+
+    public virtual DbSet<Invoice> Invoices { get; set; }
+    public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }
 }
