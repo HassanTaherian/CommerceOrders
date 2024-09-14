@@ -1,12 +1,11 @@
-﻿namespace CommerceOrders.Contracts.Discount
+﻿namespace CommerceOrders.Contracts.Discount;
+
+public enum DiscountErrorDto
 {
-    public enum DiscountErrorDto
-    {
-        Invalid,
-        Expired,
-        AlreadyUsed,
-        Ineffective,
-        LessThanMinimumPrice,
-        Exception
-    }
+    Invalid,
+    Expired,
+    AlreadyUsed,
+    Ineffective,
+    LessThanMinimumPrice,
+    Exception
 }

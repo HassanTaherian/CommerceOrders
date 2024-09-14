@@ -1,7 +1,6 @@
-﻿namespace CommerceOrders.Contracts.UI.Watch
+﻿namespace CommerceOrders.Contracts.UI.Watch;
+
+public class WatchRequestItemsDto
 {
-    public class WatchRequestItemsDto
-    {
-        public int UserId { get; set; }
-    }
+    public int UserId { get; set; }
 }

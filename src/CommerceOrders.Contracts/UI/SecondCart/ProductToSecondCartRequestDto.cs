@@ -1,8 +1,7 @@
-﻿namespace CommerceOrders.Contracts.UI.SecondCart
+﻿namespace CommerceOrders.Contracts.UI.SecondCart;
+
+public class ProductToSecondCartRequestDto
 {
-    public class ProductToSecondCartRequestDto
-    {
-        public int UserId { get; set; }
-        public int ProductId { get; set; }
-    }
+    public int UserId { get; set; }
+    public int ProductId { get; set; }
 }

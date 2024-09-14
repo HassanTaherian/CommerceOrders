@@ -1,7 +1,6 @@
-﻿namespace CommerceOrders.Contracts.UI.Cart
+﻿namespace CommerceOrders.Contracts.UI.Cart;
+
+public class UpdateQuantityRequestDto : BaseCartItem
 {
-    public class UpdateQuantityRequestDto : BaseCartItem
-    {
-        public int Quantity { get; set; }
-    }
+    public int Quantity { get; set; }
 }

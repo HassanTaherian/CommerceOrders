@@ -1,13 +1,12 @@
-﻿namespace CommerceOrders.Contracts.Discount
+﻿namespace CommerceOrders.Contracts.Discount;
+
+public class DiscountRequestDto
 {
-    public class DiscountRequestDto
-    {
-        public int UserId { get; set; }
+    public int UserId { get; set; }
 
-        public double TotalPrice { get; set; }
+    public double TotalPrice { get; set; }
 
-        public string? DiscountCode { get; set; }
+    public string? DiscountCode { get; set; }
 
-        public ICollection<DiscountProductRequestDto>? Products { get; set; }
-    }
+    public ICollection<DiscountProductRequestDto>? Products { get; set; }
 }

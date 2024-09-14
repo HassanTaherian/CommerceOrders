@@ -1,9 +1,8 @@
 ﻿using CommerceOrders.Domain.ValueObjects;
 
-namespace CommerceOrders.Contracts.Marketing.Receive
+namespace CommerceOrders.Contracts.Marketing.Receive;
+
+public class MarketingStateResponseDto
 {
-    public class MarketingStateResponseDto
-    {
-        public InvoiceState InvoiceState { get; set; }
-    }
+    public InvoiceState InvoiceState { get; set; }
 }

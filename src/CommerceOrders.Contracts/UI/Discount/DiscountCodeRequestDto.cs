@@ -1,9 +1,8 @@
-﻿namespace CommerceOrders.Contracts.UI.Discount
-{
-    public class DiscountCodeRequestDto
-    {
-        public int UserId { get; set; }
+﻿namespace CommerceOrders.Contracts.UI.Discount;
 
-        public string? DiscountCode { get; set; }
-    }
+public class DiscountCodeRequestDto
+{
+    public int UserId { get; set; }
+
+    public string? DiscountCode { get; set; }
 }

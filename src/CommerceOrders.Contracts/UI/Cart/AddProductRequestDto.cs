@@ -1,9 +1,8 @@
-﻿namespace CommerceOrders.Contracts.UI.Cart
-{
-    public class AddProductRequestDto : BaseCartItem
-    {
-        public int UnitPrice { get; set; }
+﻿namespace CommerceOrders.Contracts.UI.Cart;
 
-        public int Quantity { get; set; }
-    }
+public class AddProductRequestDto : BaseCartItem
+{
+    public int UnitPrice { get; set; }
+
+    public int Quantity { get; set; }
 }

@@ -1,8 +1,7 @@
-﻿namespace CommerceOrders.Contracts.UI.Order.Returning
+﻿namespace CommerceOrders.Contracts.UI.Order.Returning;
+
+public class ReturningRequestDto
 {
-    public class ReturningRequestDto
-    {
-        public long InvoiceId { get; set; }
-        public ICollection<int> ProductIds { get; set; }
-    }
+    public long InvoiceId { get; set; }
+    public ICollection<int> ProductIds { get; set; }
 }
