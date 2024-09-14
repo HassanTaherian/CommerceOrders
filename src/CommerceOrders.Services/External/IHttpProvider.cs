@@ -1,9 +1,8 @@
-﻿namespace CommerceOrders.Services.External
-{
-    public interface IHttpProvider
-    {
-        Task<string> Get(string url);
+﻿namespace CommerceOrders.Services.External;
 
-        Task<string> Post(string url, string json);
-    }
+public interface IHttpProvider
+{
+    Task<string> Get(string url);
+
+    Task<string> Post(string url, string json);
 }

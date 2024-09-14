@@ -1,18 +1,17 @@
 ﻿using CommerceOrders.Contracts.UI.Cart;
 using CommerceOrders.Domain.ValueObjects;
 
-namespace CommerceOrders.Services.Abstractions
+namespace CommerceOrders.Services.Abstractions;
+
+public interface IProductService
 {
-    public interface IProductService
-    {
-        Task AddCart(AddProductRequestDto addProductRequestDto, InvoiceState invoiceState);
+    Task AddCart(AddProductRequestDto addProductRequestDto, InvoiceState invoiceState);
 
-        Task UpdateQuantity(UpdateQuantityRequestDto updateQuantityRequestDto);
+    Task UpdateQuantity(UpdateQuantityRequestDto updateQuantityRequestDto);
 
-        Task DeleteItem(DeleteProductRequestDto deleteProductRequestDto);
+    Task DeleteItem(DeleteProductRequestDto deleteProductRequestDto);
 
-        List<WatchInvoiceItemsResponseDto> ExistedCartItems(int userId);
+    List<WatchInvoiceItemsResponseDto> ExistedCartItems(int userId);
 
-        List<WatchInvoiceItemsResponseDto> IsDeletedCartItems(int userId);
-    }
+    List<WatchInvoiceItemsResponseDto> IsDeletedCartItems(int userId);
 }

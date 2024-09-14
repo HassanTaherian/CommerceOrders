@@ -30,7 +30,7 @@ public class MarketingAdapter : IMarketingAdapter
             InvoiceState = state,
             ShopDateTime = invoice.ShoppingDateTime
         };
-        
+
         return marketingInvoiceRequest;
     }
 }

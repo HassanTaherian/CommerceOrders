@@ -1,16 +1,15 @@
 ﻿using CommerceOrders.Contracts.UI.SecondCart;
 using CommerceOrders.Domain.Entities;
 
-namespace CommerceOrders.Services.Abstractions
+namespace CommerceOrders.Services.Abstractions;
+
+public interface ISecondCartService
 {
-    public interface ISecondCartService
-    {
-        Invoice GetSecondCart(int userId);
+    Invoice GetSecondCart(int userId);
 
-        Task SecondCartToCart(ProductToSecondCartRequestDto productToSecondCartRequestDto);
+    Task SecondCartToCart(ProductToSecondCartRequestDto productToSecondCartRequestDto);
 
-        Task CartToSecondCart(ProductToSecondCartRequestDto productToSecondCartRequestDto);
+    Task CartToSecondCart(ProductToSecondCartRequestDto productToSecondCartRequestDto);
 
-        Task DeleteItemFromTheSecondCart(ProductToSecondCartRequestDto productToSecondCartRequestDto);
-    }
+    Task DeleteItemFromTheSecondCart(ProductToSecondCartRequestDto productToSecondCartRequestDto);
 }

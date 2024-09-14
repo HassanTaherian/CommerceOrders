@@ -8,10 +8,10 @@ public class OrderMapper
     public List<InvoiceResponseDto> MapInvoicesToInvoiceResponseDtos(IEnumerable<Invoice> invoices)
     {
         return invoices.Select(invoice => new InvoiceResponseDto
-            {
-                InvoiceId = invoice.Id,
-                DateTime = invoice.ShoppingDateTime
-            })
+        {
+            InvoiceId = invoice.Id,
+            DateTime = invoice.ShoppingDateTime
+        })
             .ToList();
     }
 

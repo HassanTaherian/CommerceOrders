@@ -1,7 +1,7 @@
 ﻿using CommerceOrders.Contracts.Product;
-using CommerceOrders.Services.Abstractions;
 using CommerceOrders.Domain.Entities;
 using CommerceOrders.Domain.ValueObjects;
+using CommerceOrders.Services.Abstractions;
 
 namespace CommerceOrders.Services.External;
 
@@ -21,7 +21,7 @@ public class ProductAdapter : IProductAdapter
         var json = jsonBridge.SerializeList(countingDtos.ToList());
         await _httpProvider.Post("https://localhost:7083/mock/DiscountMock/UpdateProductCounting", json);
     }
-    
+
     private ICollection<ProductUpdateCountingItemRequestDto> MapInvoiceConfig(IEnumerable<InvoiceItem> invoiceItems,
         ProductCountingState state)
     {

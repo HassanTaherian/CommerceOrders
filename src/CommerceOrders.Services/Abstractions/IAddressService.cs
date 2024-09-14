@@ -1,10 +1,8 @@
-﻿using CommerceOrders.Contracts.UI;
-using CommerceOrders.Contracts.UI.Address;
+﻿using CommerceOrders.Contracts.UI.Address;
 
-namespace CommerceOrders.Services.Abstractions
+namespace CommerceOrders.Services.Abstractions;
+
+public interface IAddressService
 {
-    public interface IAddressService
-    {
-         Task SetAddressIdAsync(AddressInvoiceDataDto additionalInvoiceDataDto);
-    }
+    Task SetAddressIdAsync(AddressInvoiceDataDto additionalInvoiceDataDto);
 }

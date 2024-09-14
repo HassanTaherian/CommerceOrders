@@ -1,16 +1,14 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Checkout;
-using CommerceOrders.Contracts.UI.Watch;
 
-namespace CommerceOrders.Services.Abstractions
+namespace CommerceOrders.Services.Abstractions;
+
+public interface IOrderService
 {
-    public interface IOrderService
-    {
-        Task Checkout(CheckoutRequestDto dto);
+    Task Checkout(CheckoutRequestDto dto);
 
-        List<InvoiceResponseDto> GetAllOrdersOfUser(int userId);
+    List<InvoiceResponseDto> GetAllOrdersOfUser(int userId);
 
-        Task<IEnumerable<InvoiceItemResponseDto>> GetInvoiceItemsOfInvoice(long invoiceId);
+    Task<IEnumerable<InvoiceItemResponseDto>> GetInvoiceItemsOfInvoice(long invoiceId);
 
-    }
 }

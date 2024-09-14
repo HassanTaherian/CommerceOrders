@@ -1,10 +1,8 @@
-﻿using CommerceOrders.Contracts.UI;
-using CommerceOrders.Contracts.UI.Discount;
+﻿using CommerceOrders.Contracts.UI.Discount;
 
-namespace CommerceOrders.Services.Abstractions
+namespace CommerceOrders.Services.Abstractions;
+
+public interface IDiscountService
 {
-    public interface IDiscountService
-    {
-        Task SetDiscountCodeAsync(DiscountCodeRequestDto discountCodeRequestDto);
-    }
+    Task SetDiscountCodeAsync(DiscountCodeRequestDto discountCodeRequestDto);
 }

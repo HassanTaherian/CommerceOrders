@@ -1,13 +1,13 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Returning;
-using CommerceOrders.Services.Abstractions;
-using CommerceOrders.Services.External;
-using CommerceOrders.Services.Mappers;
 using CommerceOrders.Domain.Entities;
 using CommerceOrders.Domain.Exceptions;
 using CommerceOrders.Domain.Exceptions.Returning;
 using CommerceOrders.Domain.Repositories;
 using CommerceOrders.Domain.ValueObjects;
+using CommerceOrders.Services.Abstractions;
+using CommerceOrders.Services.External;
+using CommerceOrders.Services.Mappers;
 
 namespace CommerceOrders.Services.Services;
 
@@ -75,15 +75,15 @@ public class ReturningService : IReturningService
     public async Task<IEnumerable<InvoiceItemResponseDto>> ReturnedInvoiceItems(long invoiceId)
     {
         var returnedOrder = await _invoiceRepository.GetInvoiceById(invoiceId);
-        
+
         if (returnedOrder.InvoiceItems is null)
         {
             throw new EmptyInvoiceException(invoiceId);
         }
-        
+
         var returnedInvoiceItems = returnedOrder.InvoiceItems.Where(invoiceItem => invoiceItem.IsReturn);
         var invoiceItemResponseDtos = _orderMapper.MapInvoiceItemsToInvoiceItemResponseDtos(returnedInvoiceItems);
-        
+
         return invoiceItemResponseDtos;
     }
 
