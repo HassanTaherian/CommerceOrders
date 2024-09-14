@@ -1,6 +1,4 @@
 ﻿using CommerceOrders.Contracts.UI.Order.Returning;
-using CommerceOrders.Services.Abstractions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CommerceOrders.Api.Controllers;
 

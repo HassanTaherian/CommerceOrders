@@ -1,7 +1,5 @@
 ﻿using CommerceOrders.Contracts.UI.SecondCart;
 using CommerceOrders.Domain.Entities;
-using CommerceOrders.Services.Abstractions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CommerceOrders.Api.Controllers;
 

@@ -2,7 +2,6 @@ using CommerceOrders.Api.Extensions;
 using CommerceOrders.Domain.Repositories;
 using CommerceOrders.Persistence;
 using CommerceOrders.Persistence.Repositories;
-using CommerceOrders.Services.Abstractions;
 using CommerceOrders.Services.External;
 using CommerceOrders.Services.Mappers;
 using CommerceOrders.Services.Services;
