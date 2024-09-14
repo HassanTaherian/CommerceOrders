@@ -1,4 +1,4 @@
-using Asa02_SalesOrdersModule.Extensions;
+using CommerceOrders.Api.Extensions;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Repositories;
@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<InvoiceContext, InvoiceContext>(options =>
     {
         options.UseSqlServer(
-            builder.Configuration.GetConnectionString("Asa02SalesOrdersModule")
+            builder.Configuration.GetConnectionString("CommerceOrders")
         );
     }
 );

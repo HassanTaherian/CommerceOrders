@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Asa02_SalesOrdersModule", "Asa02_SalesOrdersModule\Asa02_SalesOrdersModule.csproj", "{692DDED1-8D70-4360-8382-2ACA7E83DDA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommereceOrders.Api", "CommereceOrders.Api\CommereceOrders.Api.csproj", "{692DDED1-8D70-4360-8382-2ACA7E83DDA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{BD22711F-47FC-4F97-9EA1-F2AE4CB5E71D}"
 EndProject

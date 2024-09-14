@@ -1,12 +1,9 @@
 ﻿using Contracts.UI.Cart;
-using Contracts.UI.Watch;
-using Domain.Repositories;
 using Domain.ValueObjects;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 
-namespace Asa02_SalesOrdersModule.Controllers
+namespace CommerceOrders.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

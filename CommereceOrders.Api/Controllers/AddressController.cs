@@ -1,9 +1,8 @@
-﻿using Contracts.UI;
-using Contracts.UI.Address;
+﻿using Contracts.UI.Address;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 
-namespace Asa02_SalesOrdersModule.Controllers
+namespace CommerceOrders.Api.Controllers
 {
     [ApiController, Route("api/[controller]")]
     public class AddressController : ControllerBase

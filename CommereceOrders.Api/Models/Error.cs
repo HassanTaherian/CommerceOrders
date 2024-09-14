@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Asa02_SalesOrdersModule.Models
+namespace CommerceOrders.Api.Models
 {
     public class Error
     {

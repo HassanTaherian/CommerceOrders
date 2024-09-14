@@ -3,7 +3,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 
-namespace Asa02_SalesOrdersModule.Controllers
+namespace CommerceOrders.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

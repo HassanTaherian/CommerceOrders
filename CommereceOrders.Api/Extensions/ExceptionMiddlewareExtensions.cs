@@ -1,8 +1,8 @@
-﻿using Asa02_SalesOrdersModule.Models;
+﻿using CommerceOrders.Api.Models;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 
-namespace Asa02_SalesOrdersModule.Extensions
+namespace CommerceOrders.Api.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {
