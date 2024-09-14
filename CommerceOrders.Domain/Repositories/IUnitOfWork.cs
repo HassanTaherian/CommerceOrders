@@ -1,4 +1,4 @@
-﻿namespace Domain.Repositories
+﻿namespace CommerceOrders.Domain.Repositories
 {
     public interface IUnitOfWork
     {

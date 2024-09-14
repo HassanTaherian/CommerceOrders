@@ -1,4 +1,4 @@
-﻿namespace Domain.Exceptions
+﻿namespace CommerceOrders.Domain.Exceptions
 {
     public class EmptyInvoiceException : BadRequestException
     {

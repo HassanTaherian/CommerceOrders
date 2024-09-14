@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using Domain.ValueObjects;
+﻿using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Services.Abstractions;
 

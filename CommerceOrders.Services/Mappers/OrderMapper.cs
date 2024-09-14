@@ -1,5 +1,5 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
-using Domain.Entities;
+using CommerceOrders.Domain.Entities;
 
 namespace CommerceOrders.Services.Mappers;
 

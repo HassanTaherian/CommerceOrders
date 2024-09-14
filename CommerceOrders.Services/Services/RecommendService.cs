@@ -2,10 +2,10 @@
 using CommerceOrders.Contracts.UI.Recommendation;
 using CommerceOrders.Services.Abstractions;
 using CommerceOrders.Services.External;
-using Domain.Entities;
-using Domain.Exceptions;
-using Domain.Repositories;
-using Domain.ValueObjects;
+using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.Exceptions;
+using CommerceOrders.Domain.Repositories;
+using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Services.Services
 {

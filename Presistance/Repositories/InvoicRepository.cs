@@ -1,8 +1,8 @@
-﻿using Domain.Entities;
-using Domain.Exceptions;
-using Domain.Exceptions.SecondCart;
-using Domain.Repositories;
-using Domain.ValueObjects;
+﻿using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.Exceptions;
+using CommerceOrders.Domain.Exceptions.SecondCart;
+using CommerceOrders.Domain.Repositories;
+using CommerceOrders.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories

@@ -1,4 +1,4 @@
-﻿using Domain.ValueObjects;
+﻿using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Contracts.Product
 {

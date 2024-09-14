@@ -1,6 +1,6 @@
 ﻿using CommerceOrders.Contracts.Marketing.Send;
-using Domain.Entities;
-using Domain.ValueObjects;
+using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Services.External;
 

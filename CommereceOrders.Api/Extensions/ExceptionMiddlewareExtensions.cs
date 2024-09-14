@@ -1,5 +1,5 @@
 ﻿using CommerceOrders.Api.Models;
-using Domain.Exceptions;
+using CommerceOrders.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace CommerceOrders.Api.Extensions

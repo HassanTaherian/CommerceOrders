@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
-using Domain.ValueObjects;
+﻿using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.ValueObjects;
 
-namespace Domain.Repositories
+namespace CommerceOrders.Domain.Repositories
 {
     public interface IInvoiceRepository
     {

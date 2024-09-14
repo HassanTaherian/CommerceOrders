@@ -1,5 +1,5 @@
 using CommerceOrders.Api.Extensions;
-using Domain.Repositories;
+using CommerceOrders.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Repositories;
 using CommerceOrders.Services.Abstractions;

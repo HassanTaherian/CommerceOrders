@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities
+﻿namespace CommerceOrders.Domain.Entities
 {
     public class BaseEntity
     {

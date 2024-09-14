@@ -1,4 +1,4 @@
-﻿namespace Domain.Exceptions.Returning
+﻿namespace CommerceOrders.Domain.Exceptions.Returning
 {
     public class InvoiceIsInCartStateException : BadRequestException
     {

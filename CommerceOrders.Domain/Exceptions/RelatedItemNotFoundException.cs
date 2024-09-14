@@ -1,7 +1,7 @@
 ﻿using System;
-using Domain.Exceptions;
+using CommerceOrders.Domain.Exceptions;
 
-namespace Domain.Exceptions
+namespace CommerceOrders.Domain.Exceptions
 {
     public sealed class RelatedItemNotFoundException:NotFoundException
     {

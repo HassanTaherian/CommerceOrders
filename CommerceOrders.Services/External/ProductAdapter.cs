@@ -1,7 +1,7 @@
 ﻿using CommerceOrders.Contracts.Product;
 using CommerceOrders.Services.Abstractions;
-using Domain.Entities;
-using Domain.ValueObjects;
+using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Services.External;
 

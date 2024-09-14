@@ -1,6 +1,6 @@
-﻿using Domain.ValueObjects;
+﻿using CommerceOrders.Domain.ValueObjects;
 
-namespace Domain.Entities
+namespace CommerceOrders.Domain.Entities
 {
     public class Invoice : BaseEntity
     {

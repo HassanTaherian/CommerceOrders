@@ -1,4 +1,4 @@
-﻿namespace Domain.Exceptions.SecondCart
+﻿namespace CommerceOrders.Domain.Exceptions.SecondCart
 {
     public class SecondCartNotFoundException : NotFoundException
     {

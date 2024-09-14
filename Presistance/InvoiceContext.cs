@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using Domain.Repositories;
+﻿using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Configurations;
 

@@ -1,8 +1,8 @@
 ﻿using CommerceOrders.Contracts.UI;
 using CommerceOrders.Contracts.UI.Address;
 using CommerceOrders.Services.Abstractions;
-using Domain.Exceptions;
-using Domain.Repositories;
+using CommerceOrders.Domain.Exceptions;
+using CommerceOrders.Domain.Repositories;
 
 namespace CommerceOrders.Services.Services
 {

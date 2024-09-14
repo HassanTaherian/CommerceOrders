@@ -2,9 +2,9 @@
 using CommerceOrders.Contracts.UI.Discount;
 using CommerceOrders.Services.Abstractions;
 using CommerceOrders.Services.External;
-using Domain.Entities;
-using Domain.Exceptions;
-using Domain.Repositories;
+using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.Exceptions;
+using CommerceOrders.Domain.Repositories;
 
 namespace CommerceOrders.Services.Services
 {

@@ -1,6 +1,6 @@
 ﻿using CommerceOrders.Contracts.Product;
 using CommerceOrders.Contracts.UI.Recommendation;
-using Domain.Entities;
+using CommerceOrders.Domain.Entities;
 
 namespace CommerceOrders.Services.Abstractions
 {

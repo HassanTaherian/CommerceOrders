@@ -1,4 +1,4 @@
-﻿using Domain.Repositories;
+﻿using CommerceOrders.Domain.Repositories;
 
 namespace Persistence.Repositories;
 

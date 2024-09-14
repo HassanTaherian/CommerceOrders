@@ -1,4 +1,4 @@
-﻿namespace Domain.ValueObjects
+﻿namespace CommerceOrders.Domain.ValueObjects
 {
     public enum InvoiceState
     {

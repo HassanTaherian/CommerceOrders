@@ -22,7 +22,7 @@ namespace Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Domain.Entities.Invoice", b =>
+            modelBuilder.Entity("CommerceOrders.Domain.Entities.Invoice", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace Persistence.Migrations
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("Domain.Entities.InvoiceItem", b =>
+            modelBuilder.Entity("CommerceOrders.Domain.Entities.InvoiceItem", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,14 +92,14 @@ namespace Persistence.Migrations
                     b.ToTable("InvoiceItems");
                 });
 
-            modelBuilder.Entity("Domain.Entities.InvoiceItem", b =>
+            modelBuilder.Entity("CommerceOrders.Domain.Entities.InvoiceItem", b =>
                 {
-                    b.HasOne("Domain.Entities.Invoice", null)
+                    b.HasOne("CommerceOrders.Domain.Entities.Invoice", null)
                         .WithMany("InvoiceItems")
                         .HasForeignKey("InvoiceId");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Invoice", b =>
+            modelBuilder.Entity("CommerceOrders.Domain.Entities.Invoice", b =>
                 {
                     b.Navigation("InvoiceItems");
                 });

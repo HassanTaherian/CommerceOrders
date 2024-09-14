@@ -3,11 +3,11 @@ using CommerceOrders.Contracts.UI.Order.Returning;
 using CommerceOrders.Services.Abstractions;
 using CommerceOrders.Services.External;
 using CommerceOrders.Services.Mappers;
-using Domain.Entities;
-using Domain.Exceptions;
-using Domain.Exceptions.Returning;
-using Domain.Repositories;
-using Domain.ValueObjects;
+using CommerceOrders.Domain.Entities;
+using CommerceOrders.Domain.Exceptions;
+using CommerceOrders.Domain.Exceptions.Returning;
+using CommerceOrders.Domain.Repositories;
+using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Services.Services;
 
