@@ -1,40 +1,39 @@
 ﻿using CommerceOrders.Contracts.UI.Order.Checkout;
-using Microsoft.AspNetCore.Mvc;
 using CommerceOrders.Services.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CommerceOrders.Api.Controllers
+namespace CommerceOrders.Api.Controllers;
+
+[ApiController, Route("/api/[controller]/[action]")]
+public class OrderController : Controller
 {
-    [ApiController, Route("/api/[controller]/[action]")]
-    public class OrderController : Controller
-    {
-        private readonly IOrderService _orderService;
+    private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService orderService)
-        {
-            _orderService = orderService;
-        }
-        
-        [HttpGet]
-        [Route("{userId:int}")]
-        public  IActionResult GetAllOrdersOfUser(int userId)
-        {
-            var invoices = _orderService.GetAllOrdersOfUser(userId);
-            return Ok(invoices);
-        }
-        
-        [HttpGet]
-        [Route("{invoiceId:long}")]
-        public async Task<IActionResult> GetInvoiceItemsOfInvoice(long invoiceId)
-        {
-            var items = await _orderService.GetInvoiceItemsOfInvoice(invoiceId);
-            return Ok(items);
-        }
-        
-        [HttpPost]
-        public async Task<IActionResult> Checkout(CheckoutRequestDto checkout)
-        {
-            await _orderService.Checkout(checkout);
-            return Ok();
-        }
+    public OrderController(IOrderService orderService)
+    {
+        _orderService = orderService;
+    }
+
+    [HttpGet]
+    [Route("{userId:int}")]
+    public IActionResult GetAllOrdersOfUser(int userId)
+    {
+        var invoices = _orderService.GetAllOrdersOfUser(userId);
+        return Ok(invoices);
+    }
+
+    [HttpGet]
+    [Route("{invoiceId:long}")]
+    public async Task<IActionResult> GetInvoiceItemsOfInvoice(long invoiceId)
+    {
+        var items = await _orderService.GetInvoiceItemsOfInvoice(invoiceId);
+        return Ok(items);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Checkout(CheckoutRequestDto checkout)
+    {
+        await _orderService.Checkout(checkout);
+        return Ok();
     }
 }

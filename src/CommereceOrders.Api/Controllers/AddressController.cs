@@ -1,25 +1,24 @@
 ﻿using CommerceOrders.Contracts.UI.Address;
-using Microsoft.AspNetCore.Mvc;
 using CommerceOrders.Services.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CommerceOrders.Api.Controllers
+namespace CommerceOrders.Api.Controllers;
+
+[ApiController, Route("api/[controller]")]
+public class AddressController : ControllerBase
 {
-    [ApiController, Route("api/[controller]")]
-    public class AddressController : ControllerBase
+    private readonly IAddressService _addressService;
+
+    public AddressController(IAddressService addressService)
     {
-        private readonly IAddressService _addressService;
+        _addressService = addressService;
+    }
 
-        public AddressController(IAddressService addressService)
-        {
-            _addressService = addressService;
-        }
-
-        [HttpPatch]
-        public async Task<IActionResult> AddAddressCode(
-            [FromBody] AddressInvoiceDataDto addressInvoiceDataDto)
-        {
-            await _addressService.SetAddressIdAsync(addressInvoiceDataDto);
-            return Ok();
-        }
+    [HttpPatch]
+    public async Task<IActionResult> AddAddressCode(
+        [FromBody] AddressInvoiceDataDto addressInvoiceDataDto)
+    {
+        await _addressService.SetAddressIdAsync(addressInvoiceDataDto);
+        return Ok();
     }
 }
