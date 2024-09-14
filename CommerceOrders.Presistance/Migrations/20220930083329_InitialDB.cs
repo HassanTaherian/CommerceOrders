@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Persistence.Migrations
+namespace CommerceOrders.Persistence.Migrations
 {
     public partial class InitialDB : Migration
     {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Persistence.Configurations
+namespace CommerceOrders.Persistence.Configurations
 {
     public class InvoiceItemConfig : IEntityTypeConfiguration<InvoiceItem>
     {

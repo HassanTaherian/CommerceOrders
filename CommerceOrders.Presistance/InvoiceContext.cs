@@ -1,9 +1,8 @@
 ﻿using CommerceOrders.Domain.Entities;
-using CommerceOrders.Domain.Repositories;
+using CommerceOrders.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
-using Persistence.Configurations;
 
-namespace Persistence.Repositories
+namespace CommerceOrders.Persistence
 {
     public class InvoiceContext : DbContext
     {

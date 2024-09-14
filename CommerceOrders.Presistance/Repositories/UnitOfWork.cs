@@ -1,6 +1,6 @@
 ﻿using CommerceOrders.Domain.Repositories;
 
-namespace Persistence.Repositories;
+namespace CommerceOrders.Persistence.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {

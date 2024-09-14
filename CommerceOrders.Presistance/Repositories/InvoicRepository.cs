@@ -5,7 +5,7 @@ using CommerceOrders.Domain.Repositories;
 using CommerceOrders.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace Persistence.Repositories
+namespace CommerceOrders.Persistence.Repositories
 {
     public class InvoiceRepository : IInvoiceRepository
     {

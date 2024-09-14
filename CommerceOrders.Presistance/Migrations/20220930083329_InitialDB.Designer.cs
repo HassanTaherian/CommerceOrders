@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Persistence.Repositories;
+using CommerceOrders.Persistence;
 
 #nullable disable
 
-namespace Persistence.Migrations
+namespace CommerceOrders.Persistence.Migrations
 {
     [DbContext(typeof(InvoiceContext))]
     [Migration("20220930083329_InitialDB")]

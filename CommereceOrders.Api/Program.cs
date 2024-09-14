@@ -1,7 +1,8 @@
 using CommerceOrders.Api.Extensions;
 using CommerceOrders.Domain.Repositories;
+using CommerceOrders.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Persistence.Repositories;
+using CommerceOrders.Persistence.Repositories;
 using CommerceOrders.Services.Abstractions;
 using CommerceOrders.Services.External;
 using CommerceOrders.Services.Mappers;
