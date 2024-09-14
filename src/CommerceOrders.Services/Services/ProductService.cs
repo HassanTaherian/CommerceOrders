@@ -1,9 +1,4 @@
 ﻿using CommerceOrders.Contracts.UI.Cart;
-using CommerceOrders.Domain.Entities;
-using CommerceOrders.Domain.Exceptions;
-using CommerceOrders.Domain.Repositories;
-using CommerceOrders.Domain.ValueObjects;
-using CommerceOrders.Services.Abstractions;
 
 namespace CommerceOrders.Services.Services;
 

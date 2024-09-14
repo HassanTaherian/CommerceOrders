@@ -1,7 +1,4 @@
-﻿using CommerceOrders.Domain.Entities;
-using CommerceOrders.Domain.ValueObjects;
-
-namespace CommerceOrders.Services.External;
+﻿namespace CommerceOrders.Services.External;
 
 public interface IMarketingAdapter
 {

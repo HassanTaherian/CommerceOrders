@@ -1,12 +1,5 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Checkout;
-using CommerceOrders.Domain.Entities;
-using CommerceOrders.Domain.Exceptions;
-using CommerceOrders.Domain.Repositories;
-using CommerceOrders.Domain.ValueObjects;
-using CommerceOrders.Services.Abstractions;
-using CommerceOrders.Services.External;
-using CommerceOrders.Services.Mappers;
 
 namespace CommerceOrders.Services.Services;
 

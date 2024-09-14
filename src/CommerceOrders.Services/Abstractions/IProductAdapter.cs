@@ -1,7 +1,4 @@
-﻿using CommerceOrders.Domain.Entities;
-using CommerceOrders.Domain.ValueObjects;
-
-namespace CommerceOrders.Services.Abstractions;
+﻿namespace CommerceOrders.Services.Abstractions;
 
 public interface IProductAdapter
 {

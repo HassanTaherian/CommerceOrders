@@ -1,11 +1,5 @@
 ﻿using CommerceOrders.Contracts.Product;
 using CommerceOrders.Contracts.UI.Recommendation;
-using CommerceOrders.Domain.Entities;
-using CommerceOrders.Domain.Exceptions;
-using CommerceOrders.Domain.Repositories;
-using CommerceOrders.Domain.ValueObjects;
-using CommerceOrders.Services.Abstractions;
-using CommerceOrders.Services.External;
 
 namespace CommerceOrders.Services.Services;
 

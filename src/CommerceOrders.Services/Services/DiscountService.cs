@@ -1,10 +1,5 @@
 ﻿using CommerceOrders.Contracts.Discount;
 using CommerceOrders.Contracts.UI.Discount;
-using CommerceOrders.Domain.Entities;
-using CommerceOrders.Domain.Exceptions;
-using CommerceOrders.Domain.Repositories;
-using CommerceOrders.Services.Abstractions;
-using CommerceOrders.Services.External;
 
 namespace CommerceOrders.Services.Services;
 

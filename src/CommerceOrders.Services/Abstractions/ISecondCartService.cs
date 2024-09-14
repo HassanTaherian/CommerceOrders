@@ -1,5 +1,4 @@
 ﻿using CommerceOrders.Contracts.UI.SecondCart;
-using CommerceOrders.Domain.Entities;
 
 namespace CommerceOrders.Services.Abstractions;
 
