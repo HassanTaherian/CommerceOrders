@@ -1,10 +1,9 @@
-﻿namespace CommerceOrders.Domain.ValueObjects
+﻿namespace CommerceOrders.Domain.ValueObjects;
+
+public enum InvoiceState
 {
-    public enum InvoiceState
-    {
-        CartState,
-        SecondCartState,
-        OrderState,
-        ReturnState
-    }
+    CartState,
+    SecondCartState,
+    OrderState,
+    ReturnState
 }

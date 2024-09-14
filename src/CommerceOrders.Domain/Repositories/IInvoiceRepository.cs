@@ -1,28 +1,27 @@
 ﻿using CommerceOrders.Domain.Entities;
 using CommerceOrders.Domain.ValueObjects;
 
-namespace CommerceOrders.Domain.Repositories
+namespace CommerceOrders.Domain.Repositories;
+
+public interface IInvoiceRepository
 {
-    public interface IInvoiceRepository
-    {
-        IEnumerable<Invoice?> GetInvoices();
-        
-        IEnumerable<InvoiceItem> GetInvoiceItems();
+    IEnumerable<Invoice?> GetInvoices();
 
-        IEnumerable<Invoice?> GetInvoiceByState(int userId, InvoiceState invoiceState);
+    IEnumerable<InvoiceItem> GetInvoiceItems();
 
-        Task<Invoice> GetInvoiceById(long id);
+    IEnumerable<Invoice?> GetInvoiceByState(int userId, InvoiceState invoiceState);
 
-        Invoice GetCartOfUser(int userId);
-        
-        Task<Invoice> InsertInvoice(Invoice invoice);
+    Task<Invoice> GetInvoiceById(long id);
 
-        Invoice UpdateInvoice(Invoice invoice);
+    Invoice GetCartOfUser(int userId);
 
-        Task<InvoiceItem> GetProductOfInvoice(long invoiceId, int productId);
+    Task<Invoice> InsertInvoice(Invoice invoice);
 
-        Invoice GetSecondCartOfUser(int userId);
+    Invoice UpdateInvoice(Invoice invoice);
 
-        Task<IEnumerable<InvoiceItem>> GetNotDeleteItems(long invoiceId);
-    }
+    Task<InvoiceItem> GetProductOfInvoice(long invoiceId, int productId);
+
+    Invoice GetSecondCartOfUser(int userId);
+
+    Task<IEnumerable<InvoiceItem>> GetNotDeleteItems(long invoiceId);
 }

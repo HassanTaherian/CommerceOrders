@@ -1,8 +1,7 @@
-﻿namespace CommerceOrders.Domain.ValueObjects
+﻿namespace CommerceOrders.Domain.ValueObjects;
+
+public enum ProductCountingState
 {
-    public enum ProductCountingState
-    {
-        ShopState,
-        ReturnState
-    }
+    ShopState,
+    ReturnState
 }

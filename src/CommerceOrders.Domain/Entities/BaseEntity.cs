@@ -1,7 +1,6 @@
-﻿namespace CommerceOrders.Domain.Entities
+﻿namespace CommerceOrders.Domain.Entities;
+
+public class BaseEntity
 {
-    public class BaseEntity
-    {
-        public long Id { get; set; }
-    }
+    public long Id { get; set; }
 }

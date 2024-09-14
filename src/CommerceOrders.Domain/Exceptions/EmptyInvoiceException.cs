@@ -1,9 +1,8 @@
-﻿namespace CommerceOrders.Domain.Exceptions
+﻿namespace CommerceOrders.Domain.Exceptions;
+
+public class EmptyInvoiceException : BadRequestException
 {
-    public class EmptyInvoiceException : BadRequestException
+    public EmptyInvoiceException(long invoiceId) : base($"Invoice {invoiceId} is Empty!")
     {
-        public EmptyInvoiceException(long invoiceId) : base($"Invoice {invoiceId} is Empty!")
-        {
-        }
     }
 }

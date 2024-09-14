@@ -1,9 +1,8 @@
-﻿namespace CommerceOrders.Domain.Exceptions.Returning
+﻿namespace CommerceOrders.Domain.Exceptions.Returning;
+
+public class AlreadyReturnedException : BadRequestException
 {
-    public class AlreadyReturnedException : BadRequestException
+    public AlreadyReturnedException(long invoiceId) : base($"Invoice {invoiceId} already has been returned!")
     {
-        public AlreadyReturnedException(long invoiceId) : base($"Invoice {invoiceId} already has been returned!")
-        {
-        }
     }
 }

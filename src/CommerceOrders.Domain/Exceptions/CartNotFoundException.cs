@@ -1,9 +1,8 @@
-﻿namespace CommerceOrders.Domain.Exceptions
+﻿namespace CommerceOrders.Domain.Exceptions;
+
+public class CartNotFoundException : NotFoundException
 {
-    public class CartNotFoundException : NotFoundException
+    public CartNotFoundException(int userId) : base($"User with id {userId} has no cart!")
     {
-        public CartNotFoundException(int userId) : base($"User with id {userId} has no cart!")
-        {
-        }
     }
 }

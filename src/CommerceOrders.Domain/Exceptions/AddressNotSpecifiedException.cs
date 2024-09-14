@@ -1,9 +1,8 @@
-﻿namespace CommerceOrders.Domain.Exceptions
+﻿namespace CommerceOrders.Domain.Exceptions;
+
+public class AddressNotSpecifiedException : BadRequestException
 {
-    public class AddressNotSpecifiedException : BadRequestException
+    public AddressNotSpecifiedException(long invoiceId) : base($"Address hasn't been set for cart {invoiceId}!")
     {
-        public AddressNotSpecifiedException(long invoiceId) : base($"Address hasn't been set for cart {invoiceId}!")
-        {
-        }
     }
 }
