@@ -1,6 +1,4 @@
-﻿using CommerceOrders.Domain.Entities;
-using CommerceOrders.Persistence.Configurations;
-using Microsoft.EntityFrameworkCore;
+﻿using CommerceOrders.Persistence.Configurations;
 
 namespace CommerceOrders.Persistence;
 

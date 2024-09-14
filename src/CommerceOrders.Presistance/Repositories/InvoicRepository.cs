@@ -1,9 +1,7 @@
-﻿using CommerceOrders.Domain.Entities;
-using CommerceOrders.Domain.Exceptions;
+﻿using CommerceOrders.Domain.Exceptions;
 using CommerceOrders.Domain.Exceptions.SecondCart;
 using CommerceOrders.Domain.Repositories;
 using CommerceOrders.Domain.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 
 namespace CommerceOrders.Persistence.Repositories;
 
