@@ -26,7 +26,7 @@ public class MarketingAdapter : IMarketingAdapter
             InvoiceId = invoice.Id,
             UserId = invoice.UserId,
             InvoiceState = state,
-            ShopDateTime = invoice.ShoppingDateTime
+            ShopDateTime = invoice.CreatedAt
         };
 
         return marketingInvoiceRequest;

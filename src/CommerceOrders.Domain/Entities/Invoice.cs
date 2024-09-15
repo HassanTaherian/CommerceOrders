@@ -10,7 +10,7 @@ public class Invoice : BaseEntity
 
     public string? DiscountCode { get; set; }
 
-    public DateTime? ShoppingDateTime { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public int? AddressId { get; set; }
 

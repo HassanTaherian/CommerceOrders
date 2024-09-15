@@ -31,7 +31,7 @@ public class OrderService : IOrderService
         await _marketingAdapter.SendInvoiceToMarketing(cart, InvoiceState.OrderState);
 
         cart.State = InvoiceState.OrderState;
-        cart.ShoppingDateTime = DateTime.Now;
+        cart.CreatedAt = DateTime.Now;
         _invoiceRepository.UpdateInvoice(cart);
         await _unitOfWork.SaveChangesAsync();
     }

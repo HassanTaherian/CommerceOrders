@@ -9,7 +9,7 @@ public class OrderMapper
         return invoices.Select(invoice => new InvoiceResponseDto
         {
             InvoiceId = invoice.Id,
-            DateTime = invoice.ShoppingDateTime
+            DateTime = invoice.CreatedAt
         })
             .ToList();
     }
