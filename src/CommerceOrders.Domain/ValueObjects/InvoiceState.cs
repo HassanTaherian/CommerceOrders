@@ -1,6 +1,6 @@
 ﻿namespace CommerceOrders.Domain.ValueObjects;
 
-public enum InvoiceState
+public enum InvoiceState : byte
 {
     CartState,
     SecondCartState,
