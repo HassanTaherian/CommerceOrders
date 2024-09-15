@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommereceOrders.Api", "src\CommereceOrders.Api\CommereceOrders.Api.csproj", "{692DDED1-8D70-4360-8382-2ACA7E83DDA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceOrders.Api", "src\CommerceOrders.Api\CommerceOrders.Api.csproj", "{692DDED1-8D70-4360-8382-2ACA7E83DDA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{BD22711F-47FC-4F97-9EA1-F2AE4CB5E71D}"
 EndProject
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceOrders.Services", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceOrders.Contracts", "src\CommerceOrders.Contracts\CommerceOrders.Contracts.csproj", "{6D2DC2AE-3D04-42D7-908C-A53B4EA3889A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceOrders.Persistence", "src\CommerceOrders.Presistance\CommerceOrders.Persistence.csproj", "{AD6AD42A-FB30-4346-8BB6-67140191C7BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommerceOrders.Persistence", "src\CommerceOrders.Persistence\CommerceOrders.Persistence.csproj", "{AD6AD42A-FB30-4346-8BB6-67140191C7BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommerceOrders.Contracts\CommerceOrders.Contracts.csproj" />
-    <ProjectReference Include="..\CommerceOrders.Presistance\CommerceOrders.Persistence.csproj" />
+    <ProjectReference Include="..\CommerceOrders.Persistence\CommerceOrders.Persistence.csproj" />
     <ProjectReference Include="..\CommerceOrders.Services\CommerceOrders.Services.csproj" />
   </ItemGroup>
 
