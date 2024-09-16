@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CommerceOrders.Persistence.Configurations;
+namespace CommerceOrders.Persistence.EntityConfigs;
 
 public class InvoiceConfig : IEntityTypeConfiguration<Invoice>
 {

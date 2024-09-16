@@ -1,4 +1,4 @@
-﻿using CommerceOrders.Persistence.Configurations;
+﻿using CommerceOrders.Persistence.EntityConfigs;
 
 namespace CommerceOrders.Persistence;
 
