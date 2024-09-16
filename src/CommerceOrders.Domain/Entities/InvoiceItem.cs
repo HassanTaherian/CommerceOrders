@@ -6,7 +6,7 @@ public class InvoiceItem : BaseEntity
 
     public double OriginalPrice { get; set; }
 
-    public double? NewPrice { get; set; }
+    public double? FinalPrice { get; set; }
 
     public int Quantity { get; set; }
 

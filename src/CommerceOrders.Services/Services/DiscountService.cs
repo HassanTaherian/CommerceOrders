@@ -50,7 +50,7 @@ public sealed class DiscountService : IDiscountService
         {
             var items = invoice.InvoiceItems;
             var invoiceItem = items.Single(item => item.ProductId == discountProductResponseDto.ProductId);
-            invoiceItem.NewPrice = discountProductResponseDto.UnitPrice;
+            invoiceItem.FinalPrice = discountProductResponseDto.UnitPrice;
         }
     }
     private DiscountRequestDto MapInvoiceToDiscountRequestDto(DiscountCodeRequestDto discountCodeRequestDto)
