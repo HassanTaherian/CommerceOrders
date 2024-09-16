@@ -4,7 +4,7 @@ namespace CommerceOrders.Domain.Entities;
 
 public class Invoice : BaseEntity
 {
-    public int UserId { get; set; }
+    public int UserId { get; init; }
 
     public InvoiceState State { get; set; }
 
@@ -14,7 +14,7 @@ public class Invoice : BaseEntity
 
     public int? AddressId { get; set; }
 
-    public DateTime? ReturnDateTime { get; set; }
+    public DateTime? ReturnedAt { get; set; }
 
-    public ICollection<InvoiceItem> InvoiceItems { get; set; }
+    public ICollection<InvoiceItem> InvoiceItems { get; init; } = new List<InvoiceItem>();
 }

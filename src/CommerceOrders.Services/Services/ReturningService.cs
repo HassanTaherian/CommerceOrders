@@ -39,7 +39,7 @@ public class ReturningService : IReturningService
         await _productAdapter.UpdateCountingOfProduct(invoiceItems, ProductCountingState.ReturnState);
         await _marketingAdapter.SendInvoiceToMarketing(order, InvoiceState.ReturnState);
 
-        order.ReturnDateTime = DateTime.Now;
+        order.ReturnedAt = DateTime.Now;
         order.State = InvoiceState.ReturnState;
 
         _invoiceRepository.UpdateInvoice(order);
