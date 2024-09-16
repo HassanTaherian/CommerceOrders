@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CommerceOrders.Persistence.Migrations
 {
-    [DbContext(typeof(InvoiceContext))]
+    [DbContext(typeof(InvoiceDbContext))]
     [Migration("20240916213204_RenamedInvoiceReturnedAt")]
     partial class RenamedInvoiceReturnedAt
     {

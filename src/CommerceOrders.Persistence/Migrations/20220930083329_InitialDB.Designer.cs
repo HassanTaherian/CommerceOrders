@@ -11,7 +11,7 @@ using CommerceOrders.Persistence;
 
 namespace CommerceOrders.Persistence.Migrations
 {
-    [DbContext(typeof(InvoiceContext))]
+    [DbContext(typeof(InvoiceDbContext))]
     [Migration("20220930083329_InitialDB")]
     partial class InitialDB
     {

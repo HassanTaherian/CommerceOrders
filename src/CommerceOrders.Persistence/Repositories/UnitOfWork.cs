@@ -6,9 +6,9 @@ public class UnitOfWork : IUnitOfWork
 {
     public IInvoiceRepository InvoiceRepository { get; }
 
-    private readonly InvoiceContext _context;
+    private readonly InvoiceDbContext _context;
 
-    public UnitOfWork(InvoiceContext context, IInvoiceRepository invoiceRepository)
+    public UnitOfWork(InvoiceDbContext context, IInvoiceRepository invoiceRepository)
     {
         _context = context;
         InvoiceRepository = invoiceRepository;

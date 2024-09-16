@@ -7,9 +7,9 @@ namespace CommerceOrders.Persistence.Repositories;
 
 public class InvoiceRepository : IInvoiceRepository
 {
-    private readonly InvoiceContext _dbContext;
+    private readonly InvoiceDbContext _dbContext;
 
-    public InvoiceRepository(InvoiceContext dbContext)
+    public InvoiceRepository(InvoiceDbContext dbContext)
     {
         _dbContext = dbContext;
     }
