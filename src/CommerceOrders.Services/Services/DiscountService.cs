@@ -76,7 +76,7 @@ public sealed class DiscountService : IDiscountService
                 UnitPrice = invoiceItem.OriginalPrice
             }).ToList();
     }
-    private double TotalPrice(int userId)
+    private decimal TotalPrice(int userId)
     {
         var invoice = _invoiceRepository.GetCartOfUser(userId);
         return invoice.InvoiceItems.Where(item => item.IsDeleted == false).Sum(item => item.OriginalPrice * item.Quantity);

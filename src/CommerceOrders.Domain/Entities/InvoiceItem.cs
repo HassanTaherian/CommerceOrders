@@ -4,9 +4,9 @@ public class InvoiceItem : BaseEntity
 {
     public int ProductId { get; init; }
 
-    public double OriginalPrice { get; set; }
+    public decimal OriginalPrice { get; set; }
 
-    public double? FinalPrice { get; set; }
+    public decimal? FinalPrice { get; set; }
 
     public int Quantity { get; set; }
 

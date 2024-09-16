@@ -4,7 +4,7 @@ public class DiscountRequestDto
 {
     public int UserId { get; set; }
 
-    public double TotalPrice { get; set; }
+    public decimal TotalPrice { get; set; }
 
     public string? DiscountCode { get; set; }
 

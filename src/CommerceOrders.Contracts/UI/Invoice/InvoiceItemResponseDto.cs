@@ -3,7 +3,7 @@
 public class InvoiceItemResponseDto
 {
     public int ProductId { get; set; }
-    public double UnitPrice { get; set; }
+    public decimal UnitPrice { get; set; }
     public int Quantity { get; set; }
-    public double? NewPrice { get; set; }
+    public decimal? NewPrice { get; set; }
 }
