@@ -12,5 +12,5 @@ public class InvoiceItem : BaseEntity
 
     public bool IsDeleted { get; set; }
 
-    public bool IsReturn { get; set; }
+    public bool IsReturned { get; set; }
 }

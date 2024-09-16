@@ -59,7 +59,7 @@ public class ReturningService : IReturningService
                 throw new InvoiceItemNotFoundException(invoiceId, productId);
             }
 
-            invoiceItem.IsReturn = true;
+            invoiceItem.IsReturned = true;
             invoiceItems.Add(invoiceItem);
         }
 
@@ -74,7 +74,7 @@ public class ReturningService : IReturningService
             throw new EmptyInvoiceException(invoiceId);
         }
 
-        var returnedInvoiceItems = returnedOrder.InvoiceItems.Where(invoiceItem => invoiceItem.IsReturn);
+        var returnedInvoiceItems = returnedOrder.InvoiceItems.Where(invoiceItem => invoiceItem.IsReturned);
         var invoiceItemResponseDtos = _orderMapper.MapInvoiceItemsToInvoiceItemResponseDtos(returnedInvoiceItems);
 
         return invoiceItemResponseDtos;

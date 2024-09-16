@@ -133,7 +133,7 @@ public class RecommendService : IRecommendService
         return
         (
             from item in _invoiceRepository.GetInvoiceItems()
-            where !item.IsDeleted && !item.IsReturn
+            where !item.IsDeleted && !item.IsReturned
             group item by item.ProductId
             into productGroup
             orderby productGroup.Count() descending
