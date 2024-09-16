@@ -51,7 +51,7 @@ namespace CommerceOrders.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("CommerceOrders.Domain.Entities.InvoiceItem", b =>
@@ -89,7 +89,7 @@ namespace CommerceOrders.Persistence.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceItems");
+                    b.ToTable("InvoiceItems", (string)null);
                 });
 
             modelBuilder.Entity("CommerceOrders.Domain.Entities.InvoiceItem", b =>
