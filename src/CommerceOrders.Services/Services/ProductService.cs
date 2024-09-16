@@ -33,7 +33,7 @@ public class ProductService : IProductService
         var item = new InvoiceItem
         {
             ProductId = addProductRequestDto.ProductId,
-            Price = addProductRequestDto.UnitPrice,
+            OriginalPrice = addProductRequestDto.UnitPrice,
             Quantity = addProductRequestDto.Quantity
         };
         return item;
@@ -67,7 +67,7 @@ public class ProductService : IProductService
             var existedItem = await _invoiceRepository.GetProductOfInvoice(invoice.Id, invoiceItem.ProductId);
             existedItem.IsDeleted = false;
             existedItem.Quantity = invoiceItem.Quantity;
-            existedItem.Price = invoiceItem.Price;
+            existedItem.OriginalPrice = invoiceItem.OriginalPrice;
         }
         catch (InvoiceItemNotFoundException)
         {
@@ -130,7 +130,7 @@ public class ProductService : IProductService
             {
                 ProductId = invoiceItem.ProductId,
                 Quantity = invoiceItem.Quantity,
-                UnitPrice = invoiceItem.Price
+                UnitPrice = invoiceItem.OriginalPrice
             }
             ).ToList();
     }
@@ -159,7 +159,7 @@ public class ProductService : IProductService
             {
                 ProductId = invoiceItem.ProductId,
                 Quantity = invoiceItem.Quantity,
-                UnitPrice = invoiceItem.Price
+                UnitPrice = invoiceItem.OriginalPrice
             }
         ).ToList();
     }

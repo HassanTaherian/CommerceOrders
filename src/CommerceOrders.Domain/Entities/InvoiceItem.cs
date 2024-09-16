@@ -2,9 +2,9 @@
 
 public class InvoiceItem : BaseEntity
 {
-    public int ProductId { get; set; }
+    public int ProductId { get; init; }
 
-    public double Price { get; set; }
+    public double OriginalPrice { get; set; }
 
     public double? NewPrice { get; set; }
 

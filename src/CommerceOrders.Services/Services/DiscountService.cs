@@ -73,12 +73,12 @@ public sealed class DiscountService : IDiscountService
             {
                 ProductId = invoiceItem.ProductId,
                 Quantity = invoiceItem.Quantity,
-                UnitPrice = invoiceItem.Price
+                UnitPrice = invoiceItem.OriginalPrice
             }).ToList();
     }
     private double TotalPrice(int userId)
     {
         var invoice = _invoiceRepository.GetCartOfUser(userId);
-        return invoice.InvoiceItems.Where(item => item.IsDeleted == false).Sum(item => item.Price * item.Quantity);
+        return invoice.InvoiceItems.Where(item => item.IsDeleted == false).Sum(item => item.OriginalPrice * item.Quantity);
     }
 }

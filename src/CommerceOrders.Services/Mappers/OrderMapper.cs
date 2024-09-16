@@ -21,7 +21,7 @@ public class OrderMapper
         {
             ProductId = invoiceItem.ProductId,
             Quantity = invoiceItem.Quantity,
-            UnitPrice = invoiceItem.Price,
+            UnitPrice = invoiceItem.OriginalPrice,
             NewPrice = invoiceItem.NewPrice
         });
     }
