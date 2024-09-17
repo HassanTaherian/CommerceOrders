@@ -6,6 +6,9 @@ public class InvoiceConfig : IEntityTypeConfiguration<Invoice>
 {
     public void Configure(EntityTypeBuilder<Invoice> builder)
     {
-        builder.Property(invoice => invoice.DiscountCode).HasMaxLength(6);
+        builder.Property(invoice => invoice.DiscountCode)
+            .HasMaxLength(6)
+            .IsFixedLength()
+            .IsUnicode(false);
     }
 }
