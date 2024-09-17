@@ -4,24 +4,22 @@ namespace CommerceOrders.Services.Services;
 
 public sealed class AddressService : IAddressService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IInvoiceRepository _invoiceRepository;
+    private readonly IUnitOfWork _uow;
 
     public AddressService(IUnitOfWork unitOfWork)
     {
-        _unitOfWork = unitOfWork;
-        _invoiceRepository = unitOfWork.InvoiceRepository;
+        _uow = unitOfWork;
     }
 
     public async Task SetAddressIdAsync(AddressInvoiceDataDto addressInvoiceDataDto)
     {
-        var invoice = _invoiceRepository.GetCartOfUser(addressInvoiceDataDto.UserId);
+        var invoice = _uow.InvoiceRepository.GetCartOfUser(addressInvoiceDataDto.UserId);
+
         if (invoice is null)
         {
             throw new InvoiceNotFoundException(addressInvoiceDataDto.UserId);
         }
         invoice.AddressId = addressInvoiceDataDto.AddressId;
-        _invoiceRepository.UpdateInvoice(invoice);
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
 }
