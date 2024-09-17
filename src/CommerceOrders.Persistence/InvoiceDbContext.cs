@@ -4,7 +4,7 @@ namespace CommerceOrders.Persistence;
 
 public class InvoiceDbContext : DbContext
 {
-    public InvoiceDbContext(DbContextOptions options) : base(options)
+    public InvoiceDbContext(DbContextOptions<InvoiceDbContext> options) : base(options)
     {
     }
 
