@@ -4,13 +4,11 @@ namespace CommerceOrders.Services.Services;
 
 public class CartService : ICartService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IInvoiceRepository _invoiceRepository;
+    private readonly IUnitOfWork _uow;
 
     public CartService(IUnitOfWork unitOfWork)
     {
-        _unitOfWork = unitOfWork;
-        _invoiceRepository = unitOfWork.InvoiceRepository;
+        _uow = unitOfWork;
     }
 
     public async Task AddCart(AddProductRequestDto dto, InvoiceState invoiceState)
@@ -19,8 +17,8 @@ public class CartService : ICartService
         {
             throw new QuantityOutOfRangeInputException();
         }
-        
-        var cart = await _invoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
+
+        var cart = await _uow.InvoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
 
         if (cart is null)
         {
@@ -49,8 +47,8 @@ public class CartService : ICartService
             }
         };
 
-        _invoiceRepository.Add(invoice);
-        await _unitOfWork.SaveChangesAsync();
+        _uow.InvoiceRepository.Add(invoice);
+        await _uow.SaveChangesAsync();
     }
 
     private async Task AddItemToExistingCart(Invoice cart, AddProductRequestDto dto)
@@ -63,7 +61,7 @@ public class CartService : ICartService
                 Quantity = dto.Quantity,
                 OriginalPrice = dto.UnitPrice
             };
-            
+
             cart.InvoiceItems.Add(item);
         }
         else
@@ -74,7 +72,7 @@ public class CartService : ICartService
             item.OriginalPrice = dto.UnitPrice;
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
 
     public async Task UpdateCartItemQuantity(UpdateQuantityRequestDto dto)
@@ -84,7 +82,7 @@ public class CartService : ICartService
             throw new QuantityOutOfRangeInputException();
         }
 
-        var cart = await _invoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
+        var cart = await _uow.InvoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
 
         if (cart is null)
         {
@@ -101,12 +99,12 @@ public class CartService : ICartService
         item.Quantity = dto.Quantity;
         item.IsDeleted = false;
 
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
 
     public async Task DeleteCartItem(DeleteProductRequestDto dto)
     {
-        var cart = await _invoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
+        var cart = await _uow.InvoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
 
         if (cart is null)
         {
@@ -120,12 +118,12 @@ public class CartService : ICartService
 
         cart.InvoiceItems.First().IsDeleted = true;
 
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId)
     {
-        var cartItems = await _invoiceRepository.FetchCartItems(userId);
+        var cartItems = await _uow.InvoiceRepository.FetchCartItems(userId);
 
         if (cartItems is null)
         {
@@ -137,7 +135,7 @@ public class CartService : ICartService
 
     public async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetDeletedCartItems(int userId)
     {
-        var cartItems = await _invoiceRepository.FetchDeletedCartItems(userId);
+        var cartItems = await _uow.InvoiceRepository.FetchDeletedCartItems(userId);
 
         if (cartItems is null)
         {
