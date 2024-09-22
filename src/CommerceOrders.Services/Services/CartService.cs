@@ -15,7 +15,7 @@ public class CartService : ICartService
     {
         if (dto.Quantity <= 0)
         {
-            throw new QuantityOutOfRangeInputException();
+            throw new CartItemQuantityOutOfRangeInputException();
         }
 
         var cart = await _uow.InvoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
@@ -79,7 +79,7 @@ public class CartService : ICartService
     {
         if (dto.Quantity <= 0)
         {
-            throw new QuantityOutOfRangeInputException();
+            throw new CartItemQuantityOutOfRangeInputException();
         }
 
         var cart = await _uow.InvoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
