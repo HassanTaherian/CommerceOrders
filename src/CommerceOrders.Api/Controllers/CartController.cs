@@ -7,24 +7,24 @@ namespace CommerceOrders.Api.Controllers;
 [Route("api/[controller]/[action]")]
 public class CartController : Controller
 {
-    private readonly IProductService _productService;
+    private readonly ICartService _cartService;
 
-    public CartController(IProductService productService)
+    public CartController(ICartService productService)
     {
-        _productService = productService;
+        _cartService = productService;
     }
 
     [HttpGet("{id:int}")]
     public IActionResult ExistedCartItems(int id)
     {
-        var items = _productService.ExistedCartItems(id);
+        var items = _cartService.ExistedCartItems(id);
         return Ok(items);
     }
 
     [HttpGet("{id:int}")]
     public IActionResult IsDeletedCartItems(int id)
     {
-        var items = _productService.IsDeletedCartItems(id);
+        var items = _cartService.IsDeletedCartItems(id);
         return Ok(items);
     }
 
@@ -33,20 +33,20 @@ public class CartController : Controller
     [HttpPost]
     public async Task AddProduct(AddProductRequestDto addProductRequestDto)
     {
-        await _productService.AddCart(addProductRequestDto, InvoiceState.CartState);
+        await _cartService.AddCart(addProductRequestDto, InvoiceState.CartState);
     }
 
     // PATCH: CartController/Update
     [HttpPatch]
     public async Task UpdateProduct(UpdateQuantityRequestDto updateQuantityRequestDto)
     {
-        await _productService.UpdateQuantity(updateQuantityRequestDto);
+        await _cartService.UpdateQuantity(updateQuantityRequestDto);
     }
 
     // DELETE: CartController/Delete
     [HttpDelete]
     public async Task DeleteProduct(DeleteProductRequestDto deleteProductRequestDto)
     {
-        await _productService.DeleteItem(deleteProductRequestDto);
+        await _cartService.DeleteItem(deleteProductRequestDto);
     }
 }

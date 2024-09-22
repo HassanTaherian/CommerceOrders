@@ -2,7 +2,7 @@
 
 namespace CommerceOrders.Services.Abstractions;
 
-public interface IProductService
+public interface ICartService
 {
     Task AddCart(AddProductRequestDto addProductRequestDto, InvoiceState invoiceState);
 

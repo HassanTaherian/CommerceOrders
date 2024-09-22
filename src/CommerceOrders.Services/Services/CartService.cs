@@ -2,12 +2,12 @@
 
 namespace CommerceOrders.Services.Services;
 
-public class ProductService : IProductService
+public class CartService : ICartService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IInvoiceRepository _invoiceRepository;
 
-    public ProductService(IUnitOfWork unitOfWork)
+    public CartService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _invoiceRepository = unitOfWork.InvoiceRepository;
