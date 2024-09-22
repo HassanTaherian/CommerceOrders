@@ -22,7 +22,7 @@ public class OrderService : IOrderService
 
     public async Task Checkout(CheckoutRequestDto dto)
     {
-        var cart = _invoiceRepository.GetCartOfUser(dto.UserId);
+        var cart = _invoiceRepository.FetchCart(dto.UserId);
         ValidateCart(cart);
 
         var notDeletedItems = await _invoiceRepository.GetNotDeleteItems(cart.Id);

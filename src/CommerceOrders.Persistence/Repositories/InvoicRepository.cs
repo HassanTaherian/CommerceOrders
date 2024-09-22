@@ -31,10 +31,9 @@ public class InvoiceRepository : IInvoiceRepository
         return invoice;
     }
 
-    public async Task<Invoice> InsertInvoice(Invoice invoice)
+    public void Add(Invoice invoice)
     {
-        await _dbContext.Invoices.AddAsync(invoice);
-        return invoice;
+        _dbContext.Invoices.Add(invoice);
     }
 
     public Invoice UpdateInvoice(Invoice invoice)
@@ -54,16 +53,9 @@ public class InvoiceRepository : IInvoiceRepository
         return userInvoices;
     }
 
-    public Invoice GetCartOfUser(int userId)
+    public Invoice? FetchCart(int userId)
     {
-        var cart = GetInvoiceByState(userId, InvoiceState.CartState).FirstOrDefault();
-
-        if (cart is null)
-        {
-            throw new CartNotFoundException(userId);
-        }
-
-        return cart;
+        return GetInvoiceByState(userId, InvoiceState.CartState).FirstOrDefault();
     }
 
     public Invoice GetSecondCartOfUser(int userId)

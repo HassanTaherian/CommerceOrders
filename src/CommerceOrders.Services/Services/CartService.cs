@@ -13,68 +13,66 @@ public class CartService : ICartService
         _invoiceRepository = unitOfWork.InvoiceRepository;
     }
 
-    public async Task AddCart(AddProductRequestDto addProductRequestDto, InvoiceState invoiceState)
+    public async Task AddCart(AddProductRequestDto dto, InvoiceState invoiceState)
     {
-        var item = MapDtoToInvoiceItem(addProductRequestDto);
-
-        try
-        {
-            var invoice = _invoiceRepository.GetCartOfUser(addProductRequestDto.UserId);
-            await AddItemToInvoice(invoice, item);
-        }
-        catch (CartNotFoundException)
-        {
-            await AddItemToNewInvoice(addProductRequestDto.UserId, item);
-        }
-    }
-
-    private static InvoiceItem MapDtoToInvoiceItem(AddProductRequestDto addProductRequestDto)
-    {
-        var item = new InvoiceItem
-        {
-            ProductId = addProductRequestDto.ProductId,
-            OriginalPrice = addProductRequestDto.UnitPrice,
-            Quantity = addProductRequestDto.Quantity
-        };
-        return item;
-    }
-
-    private async Task AddItemToNewInvoice(int userId, InvoiceItem invoiceItem)
-    {
-        if (invoiceItem.Quantity <= 0)
+        if (dto.Quantity <= 0)
         {
             throw new QuantityOutOfRangeInputException();
         }
+        
+        var cart = await _invoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
 
-        var newInvoice = new Invoice
+        if (cart is null)
+        {
+            await CreateCartWithInitialItem(dto.UserId, dto);
+        }
+        else
+        {
+            await AddItemToExistingCart(cart, dto);
+        }
+    }
+
+    private async Task CreateCartWithInitialItem(int userId, AddProductRequestDto dto)
+    {
+        var invoice = new Invoice
         {
             UserId = userId,
-            InvoiceItems = new List<InvoiceItem> { invoiceItem }
+            State = InvoiceState.CartState,
+            InvoiceItems = new List<InvoiceItem>
+            {
+                new()
+                {
+                    ProductId = dto.ProductId,
+                    OriginalPrice = dto.UnitPrice,
+                    Quantity = dto.Quantity
+                }
+            }
         };
-        await _invoiceRepository.InsertInvoice(newInvoice);
+
+        _invoiceRepository.Add(invoice);
         await _unitOfWork.SaveChangesAsync();
     }
 
-    private async Task AddItemToInvoice(Invoice invoice, InvoiceItem invoiceItem)
+    private async Task AddItemToExistingCart(Invoice cart, AddProductRequestDto dto)
     {
-        if (invoiceItem.Quantity <= 0)
+        if (cart.InvoiceItems.Count == 0)
         {
-            throw new QuantityOutOfRangeInputException();
+            InvoiceItem item = new()
+            {
+                ProductId = dto.ProductId,
+                Quantity = dto.Quantity,
+                OriginalPrice = dto.UnitPrice
+            };
+            
+            cart.InvoiceItems.Add(item);
         }
-
-        try
+        else
         {
-            var existedItem = await _invoiceRepository.GetProductOfInvoice(invoice.Id, invoiceItem.ProductId);
-            existedItem.IsDeleted = false;
-            existedItem.Quantity = invoiceItem.Quantity;
-            existedItem.OriginalPrice = invoiceItem.OriginalPrice;
+            var item = cart.InvoiceItems.First();
+            item.IsDeleted = false;
+            item.Quantity = dto.Quantity;
+            item.OriginalPrice = dto.UnitPrice;
         }
-        catch (InvoiceItemNotFoundException)
-        {
-            invoice.InvoiceItems.Add(invoiceItem);
-        }
-
-        _invoiceRepository.UpdateInvoice(invoice);
 
         await _unitOfWork.SaveChangesAsync();
     }
@@ -150,7 +148,7 @@ public class CartService : ICartService
     }
 
     private static IEnumerable<WatchInvoiceItemsResponseDto> MapInvoiceItemToWatchInvoiceItemsResponseDto(
-    IEnumerable<InvoiceItem> invoiceItems)
+        IEnumerable<InvoiceItem> invoiceItems)
     {
         return invoiceItems.Select(item => new WatchInvoiceItemsResponseDto
         {

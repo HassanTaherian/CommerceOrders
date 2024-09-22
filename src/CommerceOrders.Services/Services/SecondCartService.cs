@@ -20,21 +20,23 @@ public sealed class SecondCartService : ISecondCartService
             throw new EmptySecondCartException(userId);
         return secondCart;
     }
+
     private async Task<Invoice> CreateSecondCart(int userId)
     {
-        var newSecondCart = new Invoice()
+        var newSecondCart = new Invoice
         {
             UserId = userId,
             InvoiceItems = new List<InvoiceItem>(),
             State = InvoiceState.SecondCartState
         };
-        await _invoiceRepository.InsertInvoice(newSecondCart);
+        _invoiceRepository.Add(newSecondCart);
         await _unitOfWork.SaveChangesAsync();
         return newSecondCart;
     }
+
     public async Task CartToSecondCart(ProductToSecondCartRequestDto productToSecondCardRequestDto)
     {
-        var cart = _invoiceRepository.GetCartOfUser(productToSecondCardRequestDto.UserId);
+        var cart = _invoiceRepository.FetchCart(productToSecondCardRequestDto.UserId);
         var cartItem = await _invoiceRepository.GetProductOfInvoice(cart.Id, productToSecondCardRequestDto.ProductId);
         if (cartItem == null)
             throw new InvoiceItemNotFoundException(cart.Id, productToSecondCardRequestDto.ProductId);
@@ -44,9 +46,10 @@ public sealed class SecondCartService : ISecondCartService
         cart.InvoiceItems.Remove(cartItem);
         await ApplyChanges(cart, secondCart);
     }
+
     public async Task SecondCartToCart(ProductToSecondCartRequestDto productToSecondCardRequestDto)
     {
-        var cart = _invoiceRepository.GetCartOfUser(productToSecondCardRequestDto.UserId);
+        var cart = _invoiceRepository.FetchCart(productToSecondCardRequestDto.UserId);
         var secondCart = _invoiceRepository.GetSecondCartOfUser
             (productToSecondCardRequestDto.UserId) ?? await CreateSecondCart(productToSecondCardRequestDto.UserId);
         var secondCartItem = secondCart.InvoiceItems
@@ -57,9 +60,10 @@ public sealed class SecondCartService : ISecondCartService
         secondCart.InvoiceItems.Remove(secondCartItem);
         await ApplyChanges(cart, secondCart);
     }
+
     public async Task DeleteItemFromTheSecondCart(ProductToSecondCartRequestDto productToSecondCartRequestDto)
     {
-        var cart = _invoiceRepository.GetCartOfUser(productToSecondCartRequestDto.UserId);
+        var cart = _invoiceRepository.FetchCart(productToSecondCartRequestDto.UserId);
         var secondCart = _invoiceRepository.GetSecondCartOfUser
             (productToSecondCartRequestDto.UserId) ?? await CreateSecondCart(productToSecondCartRequestDto.UserId);
         var secondCartItem = secondCart.InvoiceItems
@@ -71,6 +75,7 @@ public sealed class SecondCartService : ISecondCartService
         secondCart.InvoiceItems.Remove(secondCartItem);
         await ApplyChanges(cart, secondCart);
     }
+
     private async Task ApplyChanges(Invoice cart, Invoice secondCart)
     {
         _invoiceRepository.UpdateInvoice(cart);

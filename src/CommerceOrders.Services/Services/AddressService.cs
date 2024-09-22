@@ -13,7 +13,7 @@ public sealed class AddressService : IAddressService
 
     public async Task SetAddressIdAsync(AddressInvoiceDataDto addressInvoiceDataDto)
     {
-        var invoice = _uow.InvoiceRepository.GetCartOfUser(addressInvoiceDataDto.UserId);
+        var invoice = _uow.InvoiceRepository.FetchCart(addressInvoiceDataDto.UserId);
 
         if (invoice is null)
         {

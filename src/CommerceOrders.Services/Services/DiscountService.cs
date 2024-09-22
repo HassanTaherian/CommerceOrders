@@ -18,7 +18,7 @@ public sealed class DiscountService : IDiscountService
 
     public async Task SetDiscountCodeAsync(DiscountCodeRequestDto discountCodeRequestDto)
     {
-        var cart = _invoiceRepository.GetCartOfUser(discountCodeRequestDto.UserId);
+        var cart = _invoiceRepository.FetchCart(discountCodeRequestDto.UserId);
         var discountResponseDto = await SendDiscountCodeAsync(discountCodeRequestDto);
         if (discountResponseDto is null)
         {
@@ -55,7 +55,7 @@ public sealed class DiscountService : IDiscountService
     }
     private DiscountRequestDto MapInvoiceToDiscountRequestDto(DiscountCodeRequestDto discountCodeRequestDto)
     {
-        var invoice = _invoiceRepository.GetCartOfUser(discountCodeRequestDto.UserId);
+        var invoice = _invoiceRepository.FetchCart(discountCodeRequestDto.UserId);
         var discountRequestDto = new DiscountRequestDto
         {
             DiscountCode = discountCodeRequestDto.DiscountCode,
@@ -78,7 +78,7 @@ public sealed class DiscountService : IDiscountService
     }
     private decimal TotalPrice(int userId)
     {
-        var invoice = _invoiceRepository.GetCartOfUser(userId);
+        var invoice = _invoiceRepository.FetchCart(userId);
         return invoice.InvoiceItems.Where(item => item.IsDeleted == false).Sum(item => item.OriginalPrice * item.Quantity);
     }
 }

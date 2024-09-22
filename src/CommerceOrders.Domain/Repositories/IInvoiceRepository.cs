@@ -13,9 +13,9 @@ public interface IInvoiceRepository
 
     Task<Invoice> GetInvoiceById(long id);
 
-    Invoice GetCartOfUser(int userId);
+    Invoice? FetchCart(int userId);
 
-    Task<Invoice> InsertInvoice(Invoice invoice);
+    void Add(Invoice invoice);
 
     Invoice UpdateInvoice(Invoice invoice);
 

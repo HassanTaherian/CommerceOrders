@@ -25,12 +25,11 @@ public class CartController : Controller
     {
         return Ok(await _cartService.GetDeletedCartItems(userId));
     }
-
-    // POST: CartController/Create
+    
     [HttpPost]
-    public async Task AddProduct(AddProductRequestDto addProductRequestDto)
+    public Task AddCartItem(AddProductRequestDto addProductRequestDto)
     {
-        await _cartService.AddCart(addProductRequestDto, InvoiceState.CartState);
+        return _cartService.AddCart(addProductRequestDto, InvoiceState.CartState);
     }
 
     [HttpPatch]
