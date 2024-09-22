@@ -1,4 +1,5 @@
-﻿using CommerceOrders.Contracts.UI.Cart;
+﻿using CommerceOrders.Contracts.UI.Address;
+using CommerceOrders.Contracts.UI.Cart;
 
 namespace CommerceOrders.Services.Services;
 
@@ -154,5 +155,17 @@ public class CartService : ICartService
             Quantity = item.Quantity,
             UnitPrice = item.OriginalPrice
         });
+    }
+    
+    public async Task SetAddress(AddressInvoiceDataDto dto)
+    {
+        var invoice = _uow.InvoiceRepository.FetchCart(dto.UserId);
+
+        if (invoice is null)
+        {
+            throw new CartNotFoundException(dto.UserId);
+        }
+        invoice.AddressId = dto.AddressId;
+        await _uow.SaveChangesAsync();
     }
 }

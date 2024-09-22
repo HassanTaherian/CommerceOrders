@@ -1,4 +1,5 @@
-﻿using CommerceOrders.Contracts.UI.Cart;
+﻿using CommerceOrders.Contracts.UI.Address;
+using CommerceOrders.Contracts.UI.Cart;
 using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Api.Controllers;
@@ -42,5 +43,13 @@ public class CartController : Controller
     public Task DeleteCartItem(DeleteProductRequestDto deleteProductRequestDto)
     {
         return _cartService.DeleteCartItem(deleteProductRequestDto);
+    }
+    
+    [HttpPatch]
+    public async Task<IActionResult> AddAddress(
+        [FromBody] AddressInvoiceDataDto addressInvoiceDataDto)
+    {
+        await _cartService.SetAddress(addressInvoiceDataDto);
+        return Ok();
     }
 }
