@@ -33,11 +33,10 @@ public class CartController : Controller
         await _cartService.AddCart(addProductRequestDto, InvoiceState.CartState);
     }
 
-    // PATCH: CartController/Update
     [HttpPatch]
-    public async Task UpdateProduct(UpdateQuantityRequestDto updateQuantityRequestDto)
+    public Task UpdateCartItemQuantity(UpdateQuantityRequestDto updateQuantityRequestDto)
     {
-        await _cartService.UpdateQuantity(updateQuantityRequestDto);
+        return _cartService.UpdateCartItemQuantity(updateQuantityRequestDto);
     }
 
     // DELETE: CartController/Delete

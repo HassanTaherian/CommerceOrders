@@ -100,6 +100,14 @@ public class InvoiceRepository : IInvoiceRepository
         return invoiceItems;
     }
 
+    public Task<Invoice?> FetchCartWithSingleItem(int userId, int productId)
+    {
+        return _dbContext.Invoices
+            .Include(invoice => invoice.InvoiceItems.Where(item => item.ProductId == productId))
+            .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
+                                            invoice.State == InvoiceState.CartState);
+    }
+
     public Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId)
     {
         return FetchCartItems(userId, false);

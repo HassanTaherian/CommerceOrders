@@ -79,21 +79,30 @@ public class CartService : ICartService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task UpdateQuantity(UpdateQuantityRequestDto updateQuantityRequestDto)
+    public async Task UpdateCartItemQuantity(UpdateQuantityRequestDto dto)
     {
-        var cart = _invoiceRepository.GetCartOfUser(updateQuantityRequestDto.UserId);
-
-        if (updateQuantityRequestDto.Quantity <= 0)
+        if (dto.Quantity <= 0)
         {
             throw new QuantityOutOfRangeInputException();
         }
 
-        var existed = await _invoiceRepository.GetProductOfInvoice(cart.Id, updateQuantityRequestDto.ProductId);
+        var cart = await _invoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
 
-        existed.Quantity = updateQuantityRequestDto.Quantity;
-        existed.IsDeleted = false;
+        if (cart is null)
+        {
+            throw new CartNotFoundException(dto.UserId);
+        }
 
-        _invoiceRepository.UpdateInvoice(cart);
+        if (cart.InvoiceItems.Count == 0)
+        {
+            throw new InvoiceItemNotFoundException(cart.Id, dto.ProductId);
+        }
+
+        var item = cart.InvoiceItems.First();
+
+        item.Quantity = dto.Quantity;
+        item.IsDeleted = false;
+
         await _unitOfWork.SaveChangesAsync();
     }
 

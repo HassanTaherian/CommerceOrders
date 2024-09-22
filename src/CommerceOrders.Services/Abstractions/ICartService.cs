@@ -6,7 +6,7 @@ public interface ICartService
 {
     Task AddCart(AddProductRequestDto addProductRequestDto, InvoiceState invoiceState);
 
-    Task UpdateQuantity(UpdateQuantityRequestDto updateQuantityRequestDto);
+    Task UpdateCartItemQuantity(UpdateQuantityRequestDto dto);
 
     Task DeleteItem(DeleteProductRequestDto deleteProductRequestDto);
 
