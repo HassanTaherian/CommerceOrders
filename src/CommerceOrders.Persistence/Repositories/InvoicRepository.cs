@@ -99,4 +99,20 @@ public class InvoiceRepository : IInvoiceRepository
 
         return invoiceItems;
     }
+
+    public Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId)
+    {
+        return FetchCartItems(userId, false);
+    }
+
+    private async Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId, bool isDeleted)
+    {
+        var cart = await _dbContext.Invoices
+            .AsNoTracking()
+            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == isDeleted))
+            .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
+                                            invoice.State == InvoiceState.CartState);
+
+        return cart?.InvoiceItems;
+    }
 }

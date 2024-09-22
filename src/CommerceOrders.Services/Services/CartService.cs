@@ -108,16 +108,16 @@ public class CartService : ICartService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public List<WatchInvoiceItemsResponseDto> ExistedCartItems(int userId)
+    public async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId)
     {
-        var invoice = _invoiceRepository.GetCartOfUser(userId);
-        var invoiceItems = GetNotDeletedItemsFromCart(invoice);
-        if (!invoiceItems.Any())
+        var cartItems = await _invoiceRepository.FetchCartItems(userId);
+
+        if (cartItems is null)
         {
-            throw new EmptyCartException(userId);
+            throw new CartNotFoundException(userId);
         }
 
-        return invoiceItems;
+        return MapInvoiceItemToWatchInvoiceItemsResponseDto(cartItems);
     }
 
     private static List<WatchInvoiceItemsResponseDto> GetNotDeletedItemsFromCart(Invoice invoice)
@@ -138,29 +138,24 @@ public class CartService : ICartService
     public List<WatchInvoiceItemsResponseDto> IsDeletedCartItems(int userId)
     {
         var invoice = _invoiceRepository.GetCartOfUser(userId);
-        var invoiceItems = GetDeletedItemsFromCart(invoice);
+        var invoiceItems = invoice.InvoiceItems.Where(item => item.IsDeleted);
 
         if (!invoiceItems.Any())
         {
             throw new EmptyCartException(userId);
         }
 
-        return invoiceItems;
-
+        return MapInvoiceItemToWatchInvoiceItemsResponseDto(invoiceItems).ToList();
     }
 
-    private static List<WatchInvoiceItemsResponseDto> GetDeletedItemsFromCart(Invoice invoice)
+    private static IEnumerable<WatchInvoiceItemsResponseDto> MapInvoiceItemToWatchInvoiceItemsResponseDto(
+    IEnumerable<InvoiceItem> invoiceItems)
     {
-        return
-        (
-            from invoiceItem in invoice.InvoiceItems
-            where invoiceItem.IsDeleted
-            select new WatchInvoiceItemsResponseDto
-            {
-                ProductId = invoiceItem.ProductId,
-                Quantity = invoiceItem.Quantity,
-                UnitPrice = invoiceItem.OriginalPrice
-            }
-        ).ToList();
+        return invoiceItems.Select(item => new WatchInvoiceItemsResponseDto
+        {
+            ProductId = item.ProductId,
+            Quantity = item.Quantity,
+            UnitPrice = item.OriginalPrice
+        });
     }
 }

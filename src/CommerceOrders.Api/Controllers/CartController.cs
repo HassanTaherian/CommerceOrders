@@ -14,11 +14,10 @@ public class CartController : Controller
         _cartService = productService;
     }
 
-    [HttpGet("{id:int}")]
-    public IActionResult ExistedCartItems(int id)
+    [HttpGet("{userId:int}")]
+    public async Task<IActionResult> GetCartItems(int userId)
     {
-        var items = _cartService.ExistedCartItems(id);
-        return Ok(items);
+        return Ok(await _cartService.GetCartItems(userId));
     }
 
     [HttpGet("{id:int}")]

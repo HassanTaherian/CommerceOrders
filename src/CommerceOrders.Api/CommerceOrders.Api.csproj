@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Middleware\**" />
+    <Content Remove="Middleware\**" />
+    <EmbeddedResource Remove="Middleware\**" />
+    <None Remove="Middleware\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,10 +32,6 @@
     <ProjectReference Include="..\CommerceOrders.Contracts\CommerceOrders.Contracts.csproj" />
     <ProjectReference Include="..\CommerceOrders.Persistence\CommerceOrders.Persistence.csproj" />
     <ProjectReference Include="..\CommerceOrders.Services\CommerceOrders.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Middleware\" />
   </ItemGroup>
 
 </Project>

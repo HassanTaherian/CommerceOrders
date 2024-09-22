@@ -10,7 +10,7 @@ public interface ICartService
 
     Task DeleteItem(DeleteProductRequestDto deleteProductRequestDto);
 
-    List<WatchInvoiceItemsResponseDto> ExistedCartItems(int userId);
+    Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId);
 
     List<WatchInvoiceItemsResponseDto> IsDeletedCartItems(int userId);
 }
