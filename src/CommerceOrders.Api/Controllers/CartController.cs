@@ -39,10 +39,9 @@ public class CartController : Controller
         return _cartService.UpdateCartItemQuantity(updateQuantityRequestDto);
     }
 
-    // DELETE: CartController/Delete
     [HttpDelete]
-    public async Task DeleteProduct(DeleteProductRequestDto deleteProductRequestDto)
+    public Task DeleteCartItem(DeleteProductRequestDto deleteProductRequestDto)
     {
-        await _cartService.DeleteItem(deleteProductRequestDto);
+        return _cartService.DeleteCartItem(deleteProductRequestDto);
     }
 }

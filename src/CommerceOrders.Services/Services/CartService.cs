@@ -106,14 +106,22 @@ public class CartService : ICartService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task DeleteItem(DeleteProductRequestDto deleteProductRequestDto)
+    public async Task DeleteCartItem(DeleteProductRequestDto dto)
     {
-        var cart = _invoiceRepository.GetCartOfUser(deleteProductRequestDto.UserId);
+        var cart = await _invoiceRepository.FetchCartWithSingleItem(dto.UserId, dto.ProductId);
 
-        var existedItem = await _invoiceRepository.GetProductOfInvoice(cart.UserId, deleteProductRequestDto.ProductId);
+        if (cart is null)
+        {
+            throw new CartNotFoundException(dto.UserId);
+        }
 
-        existedItem.IsDeleted = true;
-        _invoiceRepository.UpdateInvoice(cart);
+        if (cart.InvoiceItems.Count == 0)
+        {
+            throw new InvoiceItemNotFoundException(cart.Id, dto.ProductId);
+        }
+
+        cart.InvoiceItems.First().IsDeleted = true;
+
         await _unitOfWork.SaveChangesAsync();
     }
 

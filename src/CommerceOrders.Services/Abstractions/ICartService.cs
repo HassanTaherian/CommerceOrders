@@ -8,7 +8,7 @@ public interface ICartService
 
     Task UpdateCartItemQuantity(UpdateQuantityRequestDto dto);
 
-    Task DeleteItem(DeleteProductRequestDto deleteProductRequestDto);
+    Task DeleteCartItem(DeleteProductRequestDto deleteProductRequestDto);
 
     Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId);
 
