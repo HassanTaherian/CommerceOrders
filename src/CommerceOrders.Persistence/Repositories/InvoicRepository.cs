@@ -115,4 +115,6 @@ public class InvoiceRepository : IInvoiceRepository
 
         return cart?.InvoiceItems;
     }
+
+    public Task<IEnumerable<InvoiceItem>?> FetchDeletedCartItems(int userId) => FetchCartItems(userId, true);
 }

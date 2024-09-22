@@ -12,5 +12,5 @@ public interface ICartService
 
     Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId);
 
-    List<WatchInvoiceItemsResponseDto> IsDeletedCartItems(int userId);
+    Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetDeletedCartItems(int userId);
 }

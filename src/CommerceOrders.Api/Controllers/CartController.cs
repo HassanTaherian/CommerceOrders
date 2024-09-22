@@ -20,13 +20,11 @@ public class CartController : Controller
         return Ok(await _cartService.GetCartItems(userId));
     }
 
-    [HttpGet("{id:int}")]
-    public IActionResult IsDeletedCartItems(int id)
+    [HttpGet("{userId:int}")]
+    public async Task<IActionResult> GetDeletedCartItems(int userId)
     {
-        var items = _cartService.IsDeletedCartItems(id);
-        return Ok(items);
+        return Ok(await _cartService.GetDeletedCartItems(userId));
     }
-
 
     // POST: CartController/Create
     [HttpPost]

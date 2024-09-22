@@ -120,32 +120,16 @@ public class CartService : ICartService
         return MapInvoiceItemToWatchInvoiceItemsResponseDto(cartItems);
     }
 
-    private static List<WatchInvoiceItemsResponseDto> GetNotDeletedItemsFromCart(Invoice invoice)
+    public async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetDeletedCartItems(int userId)
     {
-        return
-            (
-            from invoiceItem in invoice.InvoiceItems
-            where !invoiceItem.IsDeleted
-            select new WatchInvoiceItemsResponseDto
-            {
-                ProductId = invoiceItem.ProductId,
-                Quantity = invoiceItem.Quantity,
-                UnitPrice = invoiceItem.OriginalPrice
-            }
-            ).ToList();
-    }
+        var cartItems = await _invoiceRepository.FetchDeletedCartItems(userId);
 
-    public List<WatchInvoiceItemsResponseDto> IsDeletedCartItems(int userId)
-    {
-        var invoice = _invoiceRepository.GetCartOfUser(userId);
-        var invoiceItems = invoice.InvoiceItems.Where(item => item.IsDeleted);
-
-        if (!invoiceItems.Any())
+        if (cartItems is null)
         {
-            throw new EmptyCartException(userId);
+            throw new CartNotFoundException(userId);
         }
 
-        return MapInvoiceItemToWatchInvoiceItemsResponseDto(invoiceItems).ToList();
+        return MapInvoiceItemToWatchInvoiceItemsResponseDto(cartItems);
     }
 
     private static IEnumerable<WatchInvoiceItemsResponseDto> MapInvoiceItemToWatchInvoiceItemsResponseDto(

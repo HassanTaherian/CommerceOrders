@@ -26,4 +26,6 @@ public interface IInvoiceRepository
     Task<IEnumerable<InvoiceItem>> GetNotDeleteItems(long invoiceId);
 
     Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId);
+
+    Task<IEnumerable<InvoiceItem>?> FetchDeletedCartItems(int userId);
 }
