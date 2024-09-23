@@ -40,19 +40,6 @@ public sealed class NextCartService : INextCartService
         };
     }
 
-    private async Task<Invoice> CreateNextCart(int userId)
-    {
-        var nextCart = new Invoice
-        {
-            UserId = userId,
-            InvoiceItems = new List<InvoiceItem>(),
-            State = InvoiceState.NextCartState
-        };
-        _invoiceRepository.Add(nextCart);
-        await _unitOfWork.SaveChangesAsync();
-        return nextCart;
-    }
-
     public async Task MoveCartItemToNextCart(MoveBetweenNextCartAndCartDto dto)
     {
         var cart = _invoiceRepository.FetchCart(dto.UserId);
@@ -62,7 +49,7 @@ public sealed class NextCartService : INextCartService
         var nextCart = await _invoiceRepository.FetchNextCart(dto.UserId) ?? await CreateNextCart(dto.UserId);
         nextCart.InvoiceItems.Add(cartItem);
         cart.InvoiceItems.Remove(cartItem);
-        await ApplyChanges(cart, nextCart);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task MoveNextCartItemToCart(MoveBetweenNextCartAndCartDto dto)
@@ -75,7 +62,7 @@ public sealed class NextCartService : INextCartService
             throw new InvoiceItemNotFoundException(nextCart.Id, dto.ProductId);
         cart.InvoiceItems.Add(nextCartItem);
         nextCart.InvoiceItems.Remove(nextCartItem);
-        await ApplyChanges(cart, nextCart);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeleteNextCartItem(MoveBetweenNextCartAndCartDto dto)
@@ -89,13 +76,19 @@ public sealed class NextCartService : INextCartService
         cart.InvoiceItems.Add(nextCartItem);
         cart.InvoiceItems.SingleOrDefault(item => item.ProductId == nextCartItem.ProductId)!.IsDeleted = true;
         nextCart.InvoiceItems.Remove(nextCartItem);
-        await ApplyChanges(cart, nextCart);
-    }
-
-    private async Task ApplyChanges(Invoice cart, Invoice nextCart)
-    {
-        _invoiceRepository.UpdateInvoice(cart);
-        _invoiceRepository.UpdateInvoice(nextCart);
         await _unitOfWork.SaveChangesAsync();
+    }
+    
+    private async Task<Invoice> CreateNextCart(int userId)
+    {
+        var nextCart = new Invoice
+        {
+            UserId = userId,
+            InvoiceItems = new List<InvoiceItem>(),
+            State = InvoiceState.NextCartState
+        };
+        _invoiceRepository.Add(nextCart);
+        await _unitOfWork.SaveChangesAsync();
+        return nextCart;
     }
 }

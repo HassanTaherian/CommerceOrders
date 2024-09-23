@@ -46,11 +46,10 @@ public class InvoiceRepository : IInvoiceRepository
 
     public IEnumerable<Invoice?> GetInvoiceByState(int userId, InvoiceState invoiceState)
     {
-        var userInvoices = _dbContext.Invoices.Include(invoice => invoice.InvoiceItems)
+        return _dbContext.Invoices.Include(invoice => invoice.InvoiceItems)
             .Where(invoice => invoice.UserId == userId &&
                               invoice.State == invoiceState).AsEnumerable();
-
-        return userInvoices;
+        
     }
 
     public Invoice? FetchCart(int userId)

@@ -1,5 +1,4 @@
 ﻿using CommerceOrders.Contracts.UI.NextCart;
-using CommerceOrders.Domain.Entities;
 
 namespace CommerceOrders.Api.Controllers;
 
