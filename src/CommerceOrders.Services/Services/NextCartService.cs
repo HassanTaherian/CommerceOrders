@@ -5,18 +5,16 @@ namespace CommerceOrders.Services.Services;
 
 public sealed class NextCartService : INextCartService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IInvoiceRepository _invoiceRepository;
+    private readonly IUnitOfWork _uow;
 
     public NextCartService(IUnitOfWork unitOfWork)
     {
-        _unitOfWork = unitOfWork;
-        _invoiceRepository = unitOfWork.InvoiceRepository;
+        _uow = unitOfWork;
     }
 
     public async Task<NextCartResponseDto> GetNextCart(int userId)
     {
-        var nextCart = await _invoiceRepository.FetchNextCart(userId);
+        var nextCart = await _uow.InvoiceRepository.FetchNextCart(userId);
 
         if (nextCart is null)
         {
@@ -42,33 +40,33 @@ public sealed class NextCartService : INextCartService
 
     public async Task MoveCartItemToNextCart(MoveBetweenNextCartAndCartDto dto)
     {
-        var cart = _invoiceRepository.FetchCart(dto.UserId);
-        var cartItem = await _invoiceRepository.GetProductOfInvoice(cart.Id, dto.ProductId);
+        var cart = _uow.InvoiceRepository.FetchCart(dto.UserId);
+        var cartItem = await _uow.InvoiceRepository.GetProductOfInvoice(cart.Id, dto.ProductId);
         if (cartItem == null)
             throw new InvoiceItemNotFoundException(cart.Id, dto.ProductId);
-        var nextCart = await _invoiceRepository.FetchNextCart(dto.UserId) ?? await CreateNextCart(dto.UserId);
+        var nextCart = await _uow.InvoiceRepository.FetchNextCart(dto.UserId) ?? await CreateNextCart(dto.UserId);
         nextCart.InvoiceItems.Add(cartItem);
         cart.InvoiceItems.Remove(cartItem);
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
 
     public async Task MoveNextCartItemToCart(MoveBetweenNextCartAndCartDto dto)
     {
-        var cart = _invoiceRepository.FetchCart(dto.UserId);
-        var nextCart = await _invoiceRepository.FetchNextCart(dto.UserId) ?? await CreateNextCart(dto.UserId);
+        var cart = _uow.InvoiceRepository.FetchCart(dto.UserId);
+        var nextCart = await _uow.InvoiceRepository.FetchNextCart(dto.UserId) ?? await CreateNextCart(dto.UserId);
         var nextCartItem = nextCart.InvoiceItems
             .FirstOrDefault(item => item.ProductId == dto.ProductId);
         if (nextCartItem == null)
             throw new InvoiceItemNotFoundException(nextCart.Id, dto.ProductId);
         cart.InvoiceItems.Add(nextCartItem);
         nextCart.InvoiceItems.Remove(nextCartItem);
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
 
     public async Task DeleteNextCartItem(MoveBetweenNextCartAndCartDto dto)
     {
-        var cart = _invoiceRepository.FetchCart(dto.UserId);
-        var nextCart = await _invoiceRepository.FetchNextCart(dto.UserId) ?? await CreateNextCart(dto.UserId);
+        var cart = _uow.InvoiceRepository.FetchCart(dto.UserId);
+        var nextCart = await _uow.InvoiceRepository.FetchNextCart(dto.UserId) ?? await CreateNextCart(dto.UserId);
         var nextCartItem = nextCart.InvoiceItems
             .FirstOrDefault(item => item.ProductId == dto.ProductId);
         if (nextCartItem == null)
@@ -76,7 +74,7 @@ public sealed class NextCartService : INextCartService
         cart.InvoiceItems.Add(nextCartItem);
         cart.InvoiceItems.SingleOrDefault(item => item.ProductId == nextCartItem.ProductId)!.IsDeleted = true;
         nextCart.InvoiceItems.Remove(nextCartItem);
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
     
     private async Task<Invoice> CreateNextCart(int userId)
@@ -87,8 +85,8 @@ public sealed class NextCartService : INextCartService
             InvoiceItems = new List<InvoiceItem>(),
             State = InvoiceState.NextCartState
         };
-        _invoiceRepository.Add(nextCart);
-        await _unitOfWork.SaveChangesAsync();
+        _uow.InvoiceRepository.Add(nextCart);
+        await _uow.SaveChangesAsync();
         return nextCart;
     }
 }
