@@ -30,4 +30,6 @@ public interface IInvoiceRepository
     Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId);
 
     Task<IEnumerable<InvoiceItem>?> FetchDeletedCartItems(int userId);
+
+    Task<Invoice?> FetchCartWithItems(int userId);
 }

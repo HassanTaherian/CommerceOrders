@@ -16,69 +16,72 @@ public sealed class DiscountService : IDiscountService
         _httpProvider = httpProvider;
     }
 
-    public async Task SetDiscountCodeAsync(DiscountCodeRequestDto discountCodeRequestDto)
+    public async Task ApplyDiscountCode(DiscountCodeRequestDto dto)
     {
-        var cart = _invoiceRepository.FetchCart(discountCodeRequestDto.UserId);
-        var discountResponseDto = await SendDiscountCodeAsync(discountCodeRequestDto);
+        var cart = await _invoiceRepository.FetchCartWithItems(dto.UserId);
+
+        if (cart is null)
+        {
+            throw new CartNotFoundException(dto.UserId);
+        }
+
+        var discountResponseDto = await SendDiscountCode(cart, dto);
+
         if (discountResponseDto is null)
         {
             throw new ExternalModuleException("Discount");
         }
-        await ApplyDiscountCode(discountResponseDto, cart.Id);
-        cart.DiscountCode = discountCodeRequestDto.DiscountCode;
-        _invoiceRepository.UpdateInvoice(cart);
+
+        cart.DiscountCode = dto.DiscountCode;
+        ApplyDiscountOnCartItemsPrice(cart.InvoiceItems, discountResponseDto);
+
         await _unitOfWork.SaveChangesAsync();
     }
-    private async Task<DiscountResponseDto?> SendDiscountCodeAsync(DiscountCodeRequestDto discountCodeRequestDto)
+
+    private async Task<DiscountResponseDto?> SendDiscountCode(Invoice cart, DiscountCodeRequestDto dto)
     {
-        var discountRequestDto = MapInvoiceToDiscountRequestDto(discountCodeRequestDto);
+        var discountRequestDto = CreateDiscountRequestDto(cart, dto);
         var jsonBridge = new JsonBridge<DiscountRequestDto, DiscountResponseDto>();
         var json = jsonBridge.Serialize(discountRequestDto);
         var response = await _httpProvider.Post("https://localhost:7083/mock/DiscountMock/Index", json);
-        var discountResponseDto = jsonBridge.Deserialize(response);
-        return discountResponseDto;
+        return jsonBridge.Deserialize(response);
     }
-
-    private async Task ApplyDiscountCode(DiscountResponseDto discountResponseDto, long invoiceId)
+    
+    private DiscountRequestDto CreateDiscountRequestDto(Invoice cart, DiscountCodeRequestDto dto)
     {
-        var invoice = await _invoiceRepository.GetInvoiceById(invoiceId);
-        if (invoice is null)
+        return new DiscountRequestDto
         {
-            throw new InvoiceNotFoundException(invoiceId);
-        }
-        foreach (var discountProductResponseDto in discountResponseDto.Products)
-        {
-            var items = invoice.InvoiceItems;
-            var invoiceItem = items.Single(item => item.ProductId == discountProductResponseDto.ProductId);
-            invoiceItem.FinalPrice = discountProductResponseDto.UnitPrice;
-        }
-    }
-    private DiscountRequestDto MapInvoiceToDiscountRequestDto(DiscountCodeRequestDto discountCodeRequestDto)
-    {
-        var invoice = _invoiceRepository.FetchCart(discountCodeRequestDto.UserId);
-        var discountRequestDto = new DiscountRequestDto
-        {
-            DiscountCode = discountCodeRequestDto.DiscountCode,
-            UserId = discountCodeRequestDto.UserId,
-            TotalPrice = TotalPrice(discountCodeRequestDto.UserId),
-            Products = MapInvoiceItemsToDiscountProductRequestDtos(invoice.InvoiceItems)
+            DiscountCode = dto.DiscountCode,
+            UserId = dto.UserId,
+            TotalPrice = cart.TotalOriginalPrice,
+            Products = MapInvoiceItemsToDiscountProductRequestDtos(cart.InvoiceItems)
         };
-        return discountRequestDto;
     }
-
-    private IList<DiscountProductRequestDto> MapInvoiceItemsToDiscountProductRequestDtos(IEnumerable<InvoiceItem> invoiceItems)
+    
+    private IList<DiscountProductRequestDto> MapInvoiceItemsToDiscountProductRequestDtos(
+        IEnumerable<InvoiceItem> invoiceItems)
     {
         return invoiceItems.Where(invoiceItem => invoiceItem.IsDeleted == false)
-            .Select(invoiceItem => new DiscountProductRequestDto()
+            .Select(invoiceItem => new DiscountProductRequestDto
             {
                 ProductId = invoiceItem.ProductId,
                 Quantity = invoiceItem.Quantity,
                 UnitPrice = invoiceItem.OriginalPrice
             }).ToList();
     }
-    private decimal TotalPrice(int userId)
+
+    private void ApplyDiscountOnCartItemsPrice(IEnumerable<InvoiceItem> cartItems, DiscountResponseDto dto)
     {
-        var invoice = _invoiceRepository.FetchCart(userId);
-        return invoice.InvoiceItems.Where(item => item.IsDeleted == false).Sum(item => item.OriginalPrice * item.Quantity);
+        Dictionary<int, InvoiceItem> items = cartItems.ToDictionary(item => item.ProductId);
+
+        foreach (var discountItem in dto.Products)
+        {
+            if (!items.TryGetValue(discountItem.ProductId, out InvoiceItem? item))
+            {
+                throw new ExternalModuleException("Discount");
+            }
+
+            item.FinalPrice = discountItem.UnitPrice;
+        }
     }
 }

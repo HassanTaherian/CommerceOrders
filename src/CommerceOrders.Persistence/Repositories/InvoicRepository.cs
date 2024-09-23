@@ -100,21 +100,34 @@ public class InvoiceRepository : IInvoiceRepository
                                             invoice.State == InvoiceState.CartState);
     }
 
-    public Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId)
+    public async Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId)
     {
-        return FetchCartItems(userId, false);
-    }
-
-    private async Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId, bool isDeleted)
-    {
-        var cart = await _dbContext.Invoices
+        var cart = await FetchCartWithItems(userId, false)
             .AsNoTracking()
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == isDeleted))
-            .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
-                                            invoice.State == InvoiceState.CartState);
+            .FirstOrDefaultAsync();
 
         return cart?.InvoiceItems;
     }
 
-    public Task<IEnumerable<InvoiceItem>?> FetchDeletedCartItems(int userId) => FetchCartItems(userId, true);
+    public async Task<IEnumerable<InvoiceItem>?> FetchDeletedCartItems(int userId)
+    {
+        var cart = await FetchCartWithItems(userId, true)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+        
+        return cart?.InvoiceItems;
+    }
+
+    private IQueryable<Invoice> FetchCartWithItems(int userId, bool isDeleted)
+    {
+        return _dbContext.Invoices
+            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == isDeleted))
+            .Where(invoice => invoice.UserId == userId &&
+                              invoice.State == InvoiceState.CartState);
+    }
+
+    public Task<Invoice?> FetchCartWithItems(int userId)
+    {
+        return FetchCartWithItems(userId, false).FirstOrDefaultAsync();
+    }
 }

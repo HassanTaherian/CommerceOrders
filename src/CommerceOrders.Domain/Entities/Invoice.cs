@@ -17,4 +17,7 @@ public class Invoice : BaseEntity
     public DateTime? ReturnedAt { get; set; }
 
     public ICollection<InvoiceItem> InvoiceItems { get; init; } = new List<InvoiceItem>();
+
+    public decimal TotalOriginalPrice => InvoiceItems.Where(item => item.IsDeleted == false)
+        .Sum(item => item.OriginalPrice * item.Quantity);
 }

@@ -13,11 +13,9 @@ public class DiscountController : ControllerBase
     }
 
     [HttpPatch]
-    public async Task<IActionResult> AddDiscountCode([FromBody]
-        DiscountCodeRequestDto discountCodeRequestDto)
+    public async Task<IActionResult> ApplyDiscountCode([FromBody] DiscountCodeRequestDto discountCodeRequestDto)
     {
-        await _discountService.SetDiscountCodeAsync
-            (discountCodeRequestDto);
-        return Ok("Successful");
+        await _discountService.ApplyDiscountCode(discountCodeRequestDto);
+        return Ok();
     }
 }
