@@ -15,9 +15,9 @@ public class NextCartController : ControllerBase
     }
 
     [HttpGet("{userId:int}")]
-    public IEnumerable<InvoiceItem> GetNextCart(int userId)
+    public async Task<IActionResult> GetNextCart(int userId)
     {
-        return _nextCartService.GetNextCart(userId).InvoiceItems;
+        return Ok(await _nextCartService.GetNextCart(userId));
     }
 
     [HttpPatch]

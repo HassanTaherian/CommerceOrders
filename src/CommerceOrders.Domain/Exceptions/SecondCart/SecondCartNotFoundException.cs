@@ -1,8 +1,8 @@
 ﻿namespace CommerceOrders.Domain.Exceptions.SecondCart;
 
-public class SecondCartNotFoundException : NotFoundException
+public class NextCartNotFoundException : NotFoundException
 {
-    public SecondCartNotFoundException(int userId) : base($"User with id {userId} has no second cart!")
+    public NextCartNotFoundException(int userId) : base($"User with id {userId} has no next cart!")
     {
     }
 }

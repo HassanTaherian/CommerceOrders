@@ -4,7 +4,7 @@ namespace CommerceOrders.Services.Abstractions;
 
 public interface INextCartService
 {
-    Invoice GetNextCart(int userId);
+    Task<NextCartResponseDto> GetNextCart(int userId);
 
     Task MoveNextCartItemToCart(MoveBetweenNextCartAndCartDto moveBetweenNextCartAndCartDto);
 

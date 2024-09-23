@@ -58,16 +58,12 @@ public class InvoiceRepository : IInvoiceRepository
         return GetInvoiceByState(userId, InvoiceState.CartState).FirstOrDefault();
     }
 
-    public Invoice GetNextCartOfUser(int userId)
+    public Task<Invoice?> FetchNextCart(int userId)
     {
-        var secondCart = GetInvoiceByState(userId, InvoiceState.NextCartState).FirstOrDefault();
-
-        if (secondCart is null)
-        {
-            throw new SecondCartNotFoundException(userId);
-        }
-
-        return secondCart;
+        return _dbContext.Invoices
+            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted))
+            .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
+                                            invoice.State == InvoiceState.NextCartState);
     }
 
     public async Task<InvoiceItem> GetProductOfInvoice(long invoiceId, int productId)
@@ -114,7 +110,7 @@ public class InvoiceRepository : IInvoiceRepository
         var cart = await FetchCartWithItems(userId, true)
             .AsNoTracking()
             .FirstOrDefaultAsync();
-        
+
         return cart?.InvoiceItems;
     }
 
