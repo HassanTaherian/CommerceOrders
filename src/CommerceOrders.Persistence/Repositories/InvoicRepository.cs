@@ -58,9 +58,9 @@ public class InvoiceRepository : IInvoiceRepository
         return GetInvoiceByState(userId, InvoiceState.CartState).FirstOrDefault();
     }
 
-    public Invoice GetSecondCartOfUser(int userId)
+    public Invoice GetNextCartOfUser(int userId)
     {
-        var secondCart = GetInvoiceByState(userId, InvoiceState.SecondCartState).FirstOrDefault();
+        var secondCart = GetInvoiceByState(userId, InvoiceState.NextCartState).FirstOrDefault();
 
         if (secondCart is null)
         {

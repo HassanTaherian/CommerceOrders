@@ -3,7 +3,7 @@
 public enum InvoiceState : byte
 {
     CartState,
-    SecondCartState,
+    NextCartState,
     OrderState,
     ReturnState
 }

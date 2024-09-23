@@ -21,7 +21,7 @@ public interface IInvoiceRepository
 
     Task<InvoiceItem> GetProductOfInvoice(long invoiceId, int productId);
 
-    Invoice GetSecondCartOfUser(int userId);
+    Invoice GetNextCartOfUser(int userId);
 
     Task<IEnumerable<InvoiceItem>> GetNotDeleteItems(long invoiceId);
 

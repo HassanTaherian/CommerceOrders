@@ -31,7 +31,7 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IReturningService, ReturningService>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
-builder.Services.AddScoped<ISecondCartService, SecondCartService>();
+builder.Services.AddScoped<INextCartService, NextCartService>();
 builder.Services.AddScoped<IRecommendService, RecommendService>();
 builder.Services.AddSingleton<IHttpProvider, HttpProvider>();
 // Adapters

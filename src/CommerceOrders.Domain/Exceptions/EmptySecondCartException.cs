@@ -1,9 +1,9 @@
 ﻿namespace CommerceOrders.Domain.Exceptions;
 
-public class EmptySecondCartException : BadRequestException
+public class EmptyNextCartException : BadRequestException
 {
-    public EmptySecondCartException(int userId) :
-        base($"Second Cart Of User {userId} is Empty!")
+    public EmptyNextCartException(int userId) :
+        base($"Next Cart Of User {userId} is Empty!")
     {
     }
 }
