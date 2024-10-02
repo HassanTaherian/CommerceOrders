@@ -23,15 +23,10 @@ builder.Services.AddDbContext<InvoiceDbContext, InvoiceDbContext>(options =>
     }
 );
 
-// Repositories
 builder.Services.AddPersistenceServices();
-// Services
 builder.Services.AddBusinessServices();
-// Adapters
-builder.Services.AddScoped<IProductAdapter, ProductAdapter>();
-builder.Services.AddScoped<IMarketingAdapter, MarketingAdapter>();
-// Mapper
-builder.Services.AddScoped<OrderMapper>();
+builder.Services.AddExternalServices();
+builder.Services.AddMappers();
 // TODO: Inject HttpClient
 
 var app = builder.Build();

@@ -2,7 +2,7 @@
 
 namespace CommerceOrders.Services.Mappers;
 
-public class OrderMapper
+internal class OrderMapper
 {
     public List<InvoiceResponseDto> MapInvoicesToInvoiceResponseDtos(IEnumerable<Invoice> invoices)
     {

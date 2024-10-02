@@ -2,7 +2,7 @@
 
 namespace CommerceOrders.Services.External;
 
-public class HttpProvider : IHttpProvider
+internal class HttpProvider : IHttpProvider
 {
     private static readonly HttpClient _client = new HttpClient();
 

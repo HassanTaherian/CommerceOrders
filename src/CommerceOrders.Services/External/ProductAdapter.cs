@@ -2,7 +2,7 @@
 
 namespace CommerceOrders.Services.External;
 
-public class ProductAdapter : IProductAdapter
+internal class ProductAdapter : IProductAdapter
 {
     private readonly IHttpProvider _httpProvider;
 

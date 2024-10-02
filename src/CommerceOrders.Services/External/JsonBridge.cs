@@ -2,7 +2,7 @@
 
 namespace CommerceOrders.Services.External;
 
-public class JsonBridge<TIn, TOut>
+internal class JsonBridge<TIn, TOut>
 {
     public string Serialize(TIn item)
     {

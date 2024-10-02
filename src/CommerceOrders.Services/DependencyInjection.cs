@@ -14,4 +14,15 @@ public static class DependencyInjection
         services.AddScoped<IRecommendService, RecommendService>();
         services.AddSingleton<IHttpProvider, HttpProvider>();
     }
+    
+    public static void AddExternalServices(this IServiceCollection services)
+    {
+        services.AddScoped<IProductAdapter, ProductAdapter>();
+        services.AddScoped<IMarketingAdapter, MarketingAdapter>();
+    }
+    
+    public static void AddMappers(this IServiceCollection services)
+    {
+        services.AddScoped<OrderMapper>();
+    }
 }
