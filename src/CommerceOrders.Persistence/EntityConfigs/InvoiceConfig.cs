@@ -2,7 +2,7 @@
 
 namespace CommerceOrders.Persistence.EntityConfigs;
 
-public class InvoiceConfig : IEntityTypeConfiguration<Invoice>
+internal class InvoiceConfig : IEntityTypeConfiguration<Invoice>
 {
     public void Configure(EntityTypeBuilder<Invoice> builder)
     {
