@@ -24,16 +24,9 @@ builder.Services.AddDbContext<InvoiceDbContext, InvoiceDbContext>(options =>
 );
 
 // Repositories
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddPersistenceServices();
 // Services
-builder.Services.AddScoped<ICartService, CartService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IReturningService, ReturningService>();
-builder.Services.AddScoped<IDiscountService, DiscountService>();
-builder.Services.AddScoped<INextCartService, NextCartService>();
-builder.Services.AddScoped<IRecommendService, RecommendService>();
-builder.Services.AddSingleton<IHttpProvider, HttpProvider>();
+builder.Services.AddBusinessServices();
 // Adapters
 builder.Services.AddScoped<IProductAdapter, ProductAdapter>();
 builder.Services.AddScoped<IMarketingAdapter, MarketingAdapter>();

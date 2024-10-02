@@ -1,11 +1,10 @@
 ﻿using CommerceOrders.Domain.Exceptions;
-using CommerceOrders.Domain.Exceptions.SecondCart;
 using CommerceOrders.Domain.Repositories;
 using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Persistence.Repositories;
 
-public class InvoiceRepository : IInvoiceRepository
+internal class InvoiceRepository : IInvoiceRepository
 {
     private readonly InvoiceDbContext _dbContext;
 

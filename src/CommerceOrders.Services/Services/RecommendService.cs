@@ -3,7 +3,7 @@ using CommerceOrders.Contracts.UI.Recommendation;
 
 namespace CommerceOrders.Services.Services;
 
-public class RecommendService : IRecommendService
+internal class RecommendService : IRecommendService
 {
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly IHttpProvider _httpProvider;

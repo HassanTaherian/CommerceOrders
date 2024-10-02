@@ -3,7 +3,7 @@ using CommerceOrders.Contracts.UI.Discount;
 
 namespace CommerceOrders.Services.Services;
 
-public sealed class DiscountService : IDiscountService
+internal sealed class DiscountService : IDiscountService
 {
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly IUnitOfWork _unitOfWork;

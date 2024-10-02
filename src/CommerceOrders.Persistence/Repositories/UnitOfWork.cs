@@ -2,7 +2,7 @@
 
 namespace CommerceOrders.Persistence.Repositories;
 
-public class UnitOfWork : IUnitOfWork
+internal class UnitOfWork : IUnitOfWork
 {
     public IInvoiceRepository InvoiceRepository { get; }
 
@@ -13,8 +13,6 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
         InvoiceRepository = invoiceRepository;
     }
-
-
 
     public async Task<bool> SaveChangesAsync()
     {

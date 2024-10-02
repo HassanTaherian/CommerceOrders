@@ -3,7 +3,7 @@ using CommerceOrders.Domain.Exceptions.SecondCart;
 
 namespace CommerceOrders.Services.Services;
 
-public sealed class NextCartService : INextCartService
+internal sealed class NextCartService : INextCartService
 {
     private readonly IUnitOfWork _uow;
 

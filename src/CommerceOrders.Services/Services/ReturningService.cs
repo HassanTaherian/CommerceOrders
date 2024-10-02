@@ -4,7 +4,7 @@ using CommerceOrders.Domain.Exceptions.Returning;
 
 namespace CommerceOrders.Services.Services;
 
-public class ReturningService : IReturningService
+internal class ReturningService : IReturningService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IInvoiceRepository _invoiceRepository;

@@ -3,7 +3,7 @@ using CommerceOrders.Contracts.UI.Cart;
 
 namespace CommerceOrders.Services.Services;
 
-public class CartService : ICartService
+internal class CartService : ICartService
 {
     private readonly IUnitOfWork _uow;
 

@@ -3,7 +3,7 @@ using CommerceOrders.Contracts.UI.Order.Checkout;
 
 namespace CommerceOrders.Services.Services;
 
-public class OrderService : IOrderService
+internal class OrderService : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IInvoiceRepository _invoiceRepository;
