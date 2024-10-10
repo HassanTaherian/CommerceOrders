@@ -86,32 +86,6 @@ internal class InvoiceRepository : IInvoiceRepository
         return invoiceItems;
     }
 
-    public Task<Invoice?> FetchCartWithSingleItem(int userId, int productId)
-    {
-        return _dbContext.Invoices
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.ProductId == productId))
-            .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
-                                            invoice.State == InvoiceState.CartState);
-    }
-
-    public async Task<IEnumerable<InvoiceItem>?> FetchCartItems(int userId)
-    {
-        var cart = await FetchCartWithItems(userId, false)
-            .AsNoTracking()
-            .FirstOrDefaultAsync();
-
-        return cart?.InvoiceItems;
-    }
-
-    public async Task<IEnumerable<InvoiceItem>?> FetchDeletedCartItems(int userId)
-    {
-        var cart = await FetchCartWithItems(userId, true)
-            .AsNoTracking()
-            .FirstOrDefaultAsync();
-
-        return cart?.InvoiceItems;
-    }
-
     private IQueryable<Invoice> FetchCartWithItems(int userId, bool isDeleted)
     {
         return _dbContext.Invoices
