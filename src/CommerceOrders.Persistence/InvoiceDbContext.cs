@@ -1,8 +1,9 @@
-﻿using CommerceOrders.Persistence.EntityConfigs;
+﻿using CommerceOrders.Domain.Repositories;
+using CommerceOrders.Persistence.EntityConfigs;
 
 namespace CommerceOrders.Persistence;
 
-public class InvoiceDbContext : DbContext
+public class InvoiceDbContext : DbContext, IApplicationDbContext
 {
     public InvoiceDbContext(DbContextOptions<InvoiceDbContext> options) : base(options)
     {
