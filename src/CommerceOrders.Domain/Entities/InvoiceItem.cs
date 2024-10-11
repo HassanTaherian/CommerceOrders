@@ -13,4 +13,8 @@ public class InvoiceItem : BaseEntity
     public bool IsDeleted { get; set; }
 
     public bool IsReturned { get; set; }
+
+    public long InvoiceId { get; set; }
+    
+    public Invoice Invoice { get; set; }
 }
