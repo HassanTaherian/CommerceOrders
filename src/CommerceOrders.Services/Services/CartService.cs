@@ -103,9 +103,8 @@ internal class CartService : ICartService
 
     private Task<Invoice?> GetCartWithSingleItem(int userId, int productId)
     {
-        // TODO: Exclude deleted invoice items
         return QueryCart(userId)
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.ProductId == productId))
+            .Include(invoice => invoice.InvoiceItems.Where(item => item.ProductId == productId && !item.IsDeleted))
             .FirstOrDefaultAsync();
     }
 
