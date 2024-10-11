@@ -1,6 +1,5 @@
 ﻿using CommerceOrders.Contracts.UI.Address;
 using CommerceOrders.Contracts.UI.Cart;
-using CommerceOrders.Domain.ValueObjects;
 
 namespace CommerceOrders.Api.Controllers;
 
@@ -30,7 +29,7 @@ public class CartController : Controller
     [HttpPost]
     public Task AddCartItem(AddProductRequestDto addProductRequestDto)
     {
-        return _cartService.AddCart(addProductRequestDto, InvoiceState.CartState);
+        return _cartService.AddCart(addProductRequestDto);
     }
 
     [HttpPatch]

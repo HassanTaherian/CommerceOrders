@@ -5,7 +5,7 @@ namespace CommerceOrders.Services.Abstractions;
 
 public interface ICartService
 {
-    Task AddCart(AddProductRequestDto addProductRequestDto, InvoiceState invoiceState);
+    Task AddCart(AddProductRequestDto addProductRequestDto);
 
     Task UpdateCartItemQuantity(UpdateQuantityRequestDto dto);
 

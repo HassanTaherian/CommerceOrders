@@ -9,12 +9,12 @@ internal class CartService : ICartService
 {
     private readonly IApplicationDbContext _uow;
 
-    public CartService(IApplicationDbContext uow, IMarketingAdapter marketingAdapter)
+    public CartService(IApplicationDbContext uow)
     {
         _uow = uow;
     }
 
-    public async Task AddCart(AddProductRequestDto dto, InvoiceState invoiceState)
+    public async Task AddCart(AddProductRequestDto dto)
     {
         if (dto.Quantity <= 0)
         {
