@@ -27,7 +27,7 @@ internal class CartService : ICartService
             CreateCartWithInitialItem(dto.UserId, dto);
         }
         else
-        { 
+        {
             AddItemToExistingCart(cart, dto);
         }
 
@@ -188,5 +188,13 @@ internal class CartService : ICartService
 
         cart.AddressId = dto.AddressId;
         await _uow.SaveChangesAsync();
+    }
+
+    public Task<InvoiceItem?> GetCartItem(int userId, int productId)
+    {
+        return _uow.Set<InvoiceItem>()
+            .Include(item => item.Invoice)
+            .Where(item => item.ProductId == productId && item.Invoice.UserId == userId)
+            .FirstOrDefaultAsync();
     }
 }

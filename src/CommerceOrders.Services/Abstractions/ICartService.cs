@@ -16,4 +16,6 @@ public interface ICartService
     Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetDeletedCartItems(int userId);
 
     Task SetAddress(AddressInvoiceDataDto addressInvoiceDataDto);
+    
+    Task<InvoiceItem?> GetCartItem(int userId, int productId);
 }

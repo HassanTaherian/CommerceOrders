@@ -1,4 +1,5 @@
 ﻿using CommerceOrders.Contracts.UI.NextCart;
+using CommerceOrders.Domain.Exceptions.Carts;
 using CommerceOrders.Domain.Exceptions.SecondCart;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,16 +9,18 @@ internal sealed class NextCartService : INextCartService
 {
     private readonly IUnitOfWork _uow;
     private readonly IApplicationDbContext _dbContext;
+    private readonly ICartService _cartService;
 
-    public NextCartService(IUnitOfWork unitOfWork, IApplicationDbContext dbContext)
+    public NextCartService(IUnitOfWork unitOfWork, IApplicationDbContext dbContext, ICartService cartService)
     {
         _uow = unitOfWork;
         _dbContext = dbContext;
+        _cartService = cartService;
     }
 
     public async Task<NextCartResponseDto> GetNextCart(int userId)
     {
-        NextCartResponseDto? nextCart = await FetchNextCart(userId)
+        NextCartResponseDto? nextCart = await FetchNextCartWithItems(userId)
             .AsNoTracking()
             .Select(nc => new NextCartResponseDto
             {
@@ -41,27 +44,18 @@ internal sealed class NextCartService : INextCartService
 
     public async Task MoveCartItemToNextCart(MoveBetweenNextCartAndCartDto dto)
     {
-        // Todo: Should use ICartService
-        // Todo: Should only fetch cart and single item
-        Invoice? cart = await _uow.InvoiceRepository.FetchCartWithItems(dto.UserId);
-
-        if (cart is null)
-        {
-            throw new CartNotFoundException(dto.UserId);
-        }
-
-        var cartItem = cart.InvoiceItems.FirstOrDefault();
+        InvoiceItem? cartItem = await _cartService.GetCartItem(dto.UserId, dto.ProductId);
 
         if (cartItem is null)
         {
-            throw new InvoiceItemNotFoundException(cart.Id, dto.ProductId);
+            throw new CartItemNotFoundException(dto.UserId, dto.ProductId);
         }
 
-        // Todo: should not fetch cart items
         Invoice nextCart = await FetchNextCart(dto.UserId)
-            .FirstOrDefaultAsync() ?? await CreateNextCart(dto.UserId);
+            .FirstOrDefaultAsync() ?? CreateNextCart(dto.UserId);
+
         nextCart.InvoiceItems.Add(cartItem);
-        await _uow.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task MoveNextCartItemToCart(MoveBetweenNextCartAndCartDto dto)
@@ -115,7 +109,7 @@ internal sealed class NextCartService : INextCartService
         await _uow.SaveChangesAsync();
     }
 
-    private async Task<Invoice> CreateNextCart(int userId)
+    private Invoice CreateNextCart(int userId)
     {
         var nextCart = new Invoice
         {
@@ -123,25 +117,26 @@ internal sealed class NextCartService : INextCartService
             InvoiceItems = new List<InvoiceItem>(),
             State = InvoiceState.NextCartState
         };
-        _dbContext.Set<Invoice>().Add(nextCart);
-        // Todo: Unnecessary SaveChanges
-        await _dbContext.SaveChangesAsync();
+        _dbContext.Set<Invoice>()
+            .Add(nextCart);
         return nextCart;
     }
 
     private IQueryable<Invoice> FetchNextCart(int userId)
     {
         return _dbContext.Set<Invoice>()
-            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted))
-            .Where(invoice => invoice.UserId == userId &&
-                              invoice.State == InvoiceState.NextCartState);
+            .Where(i => i.UserId == userId && i.State == InvoiceState.NextCartState);
+    }
+
+    private IQueryable<Invoice> FetchNextCartWithItems(int userId)
+    {
+        return FetchNextCart(userId)
+            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted));
     }
 
     private IQueryable<Invoice> FetchNextCartWithSingleItem(int userId, int productId)
     {
-        return _dbContext.Set<Invoice>()
-            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted && item.ProductId == productId))
-            .Where(invoice => invoice.UserId == userId &&
-                              invoice.State == InvoiceState.NextCartState);
+        return FetchNextCart(userId)
+            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted && item.ProductId == productId));
     }
 }
