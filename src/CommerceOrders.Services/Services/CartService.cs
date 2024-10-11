@@ -104,10 +104,9 @@ internal class CartService : ICartService
     private Task<Invoice?> GetCartWithSingleItem(int userId, int productId)
     {
         // TODO: Exclude deleted invoice items
-        return _uow.Set<Invoice>()
+        return QueryCart(userId)
             .Include(invoice => invoice.InvoiceItems.Where(item => item.ProductId == productId))
-            .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
-                                            invoice.State == InvoiceState.CartState);
+            .FirstOrDefaultAsync();
     }
 
     public Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId)
@@ -147,18 +146,14 @@ internal class CartService : ICartService
 
     public Task<Invoice?> GetCartWithItems(int userId)
     {
-        return _uow.Set<Invoice>()
+        return QueryCart(userId)
             .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == true))
-            .Where(i => i.UserId == userId &&
-                              i.State == InvoiceState.CartState)
             .FirstOrDefaultAsync();
     }
 
     public async Task SetAddress(AddressInvoiceDataDto dto)
     {
-        Invoice? cart = await _uow.Set<Invoice>()
-            .Where(invoice => invoice.UserId == dto.UserId &&
-                              invoice.State == InvoiceState.CartState)
+        Invoice? cart = await QueryCart(dto.UserId)
             .FirstOrDefaultAsync();
 
         if (cart is null)
@@ -186,9 +181,7 @@ internal class CartService : ICartService
 
     private IQueryable<InvoiceItem> QueryCartItems(int userId, bool isDeleted)
     {
-        IQueryable<long> invoiceIds = _uow.Set<Invoice>()
-            .Where(i => i.UserId == userId &&
-                        i.State == InvoiceState.CartState)
+        IQueryable<long> invoiceIds = QueryCart(userId)
             .Select(i => i.Id);
 
         return _uow.Set<InvoiceItem>()
@@ -197,8 +190,7 @@ internal class CartService : ICartService
 
     public async Task<long> GetCartId(int userId)
     {
-        long id = await _uow.Set<Invoice>()
-            .Where(i => i.UserId == userId && i.State == InvoiceState.CartState)
+        long id = await QueryCart(userId)
             .Select(i => i.Id)
             .FirstOrDefaultAsync();
 
@@ -208,5 +200,11 @@ internal class CartService : ICartService
         }
 
         return id;
+    }
+
+    private IQueryable<Invoice> QueryCart(int userId)
+    {
+        return _uow.Set<Invoice>()
+            .Where(i => i.UserId == userId && i.State == InvoiceState.CartState);
     }
 }
