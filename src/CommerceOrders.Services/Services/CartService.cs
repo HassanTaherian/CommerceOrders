@@ -192,9 +192,13 @@ internal class CartService : ICartService
 
     public Task<InvoiceItem?> GetCartItem(int userId, int productId)
     {
+        IQueryable<long> invoiceIds = _uow.Set<Invoice>()
+            .Where(i => i.UserId == userId &&
+                        i.State == InvoiceState.CartState)
+            .Select(i => i.Id);
+        
         return _uow.Set<InvoiceItem>()
-            .Include(item => item.Invoice)
-            .Where(item => item.ProductId == productId && item.Invoice.UserId == userId)
+            .Where(item => item.ProductId == productId && invoiceIds.Contains(item.InvoiceId))
             .FirstOrDefaultAsync();
     }
 }
