@@ -1,10 +1,5 @@
 using CommerceOrders.Api.Extensions;
-using CommerceOrders.Domain.Repositories;
 using CommerceOrders.Persistence;
-using CommerceOrders.Persistence.Repositories;
-using CommerceOrders.Services.External;
-using CommerceOrders.Services.Mappers;
-using CommerceOrders.Services.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
