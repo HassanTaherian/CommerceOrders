@@ -7,14 +7,12 @@ namespace CommerceOrders.Services.Services;
 
 internal sealed class NextCartService : INextCartService
 {
-    private readonly IUnitOfWork _uow;
-    private readonly IApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _uow;
     private readonly ICartService _cartService;
 
-    public NextCartService(IUnitOfWork unitOfWork, IApplicationDbContext dbContext, ICartService cartService)
+    public NextCartService(IApplicationDbContext unitOfWork, ICartService cartService)
     {
         _uow = unitOfWork;
-        _dbContext = dbContext;
         _cartService = cartService;
     }
 
@@ -51,7 +49,7 @@ internal sealed class NextCartService : INextCartService
             .FirstOrDefaultAsync() ?? CreateNextCart(dto.UserId);
 
         nextCart.InvoiceItems.Add(cartItem);
-        await _dbContext.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
 
     public async Task MoveNextCartItemToCart(MoveBetweenNextCartAndCartDto dto)
@@ -92,14 +90,14 @@ internal sealed class NextCartService : INextCartService
             InvoiceItems = new List<InvoiceItem>(),
             State = InvoiceState.NextCartState
         };
-        _dbContext.Set<Invoice>()
+        _uow.Set<Invoice>()
             .Add(nextCart);
         return nextCart;
     }
 
     private IQueryable<Invoice> FetchNextCart(int userId)
     {
-        return _dbContext.Set<Invoice>()
+        return _uow.Set<Invoice>()
             .Where(i => i.UserId == userId && i.State == InvoiceState.NextCartState);
     }
 
@@ -107,7 +105,7 @@ internal sealed class NextCartService : INextCartService
     {
         IQueryable<long> invoiceIds = FetchNextCart(userId).Select(i => i.Id);
 
-        return _dbContext.Set<InvoiceItem>()
+        return _uow.Set<InvoiceItem>()
             .Where(item => item.ProductId == productId && invoiceIds.Contains(item.InvoiceId))
             .FirstOrDefaultAsync();
     }
