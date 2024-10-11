@@ -20,8 +20,9 @@ internal sealed class NextCartService : INextCartService
 
     public async Task<NextCartResponseDto> GetNextCart(int userId)
     {
-        NextCartResponseDto? nextCart = await FetchNextCartWithItems(userId)
+        NextCartResponseDto? nextCart = await FetchNextCart(userId)
             .AsNoTracking()
+            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted))
             .Select(nc => new NextCartResponseDto
             {
                 UserId = nc.UserId,
@@ -44,12 +45,7 @@ internal sealed class NextCartService : INextCartService
 
     public async Task MoveCartItemToNextCart(MoveBetweenNextCartAndCartDto dto)
     {
-        InvoiceItem? cartItem = await _cartService.GetCartItem(dto.UserId, dto.ProductId);
-
-        if (cartItem is null)
-        {
-            throw new CartItemNotFoundException(dto.UserId, dto.ProductId);
-        }
+        InvoiceItem cartItem = await _cartService.GetCartItem(dto.UserId, dto.ProductId);
 
         Invoice nextCart = await FetchNextCart(dto.UserId)
             .FirstOrDefaultAsync() ?? CreateNextCart(dto.UserId);
@@ -60,48 +56,27 @@ internal sealed class NextCartService : INextCartService
 
     public async Task MoveNextCartItemToCart(MoveBetweenNextCartAndCartDto dto)
     {
-        Invoice? cart = _uow.InvoiceRepository.FetchCart(dto.UserId);
-
-        if (cart is null)
-        {
-            throw new CartNotFoundException(dto.UserId);
-        }
-
-        Invoice? nextCart = await FetchNextCartWithSingleItem(dto.UserId, dto.ProductId)
-            .FirstOrDefaultAsync();
-
-        if (nextCart is null)
-        {
-            throw new NextCartNotFoundException(dto.UserId);
-        }
-
-        InvoiceItem? nextCartItem = nextCart.InvoiceItems.FirstOrDefault();
+        InvoiceItem? nextCartItem = await GetNextCartItem(dto.UserId, dto.ProductId);
 
         if (nextCartItem is null)
         {
-            throw new InvoiceItemNotFoundException(nextCart.Id, dto.ProductId);
+            throw new NextCartItemNotFoundException(dto.UserId, dto.ProductId);
         }
 
-        cart.InvoiceItems.Add(nextCartItem);
+        long cartId = await _cartService.GetCartId(dto.UserId);
+
+        nextCartItem.InvoiceId = cartId;
 
         await _uow.SaveChangesAsync();
     }
 
     public async Task DeleteNextCartItem(MoveBetweenNextCartAndCartDto dto)
     {
-        Invoice? nextCart = await FetchNextCartWithSingleItem(dto.UserId, dto.ProductId)
-            .FirstOrDefaultAsync();
+        InvoiceItem? nextCartItem = await GetNextCartItem(dto.UserId, dto.ProductId);
 
-        if (nextCart is null)
+        if (nextCartItem is null)
         {
-            throw new NextCartNotFoundException(dto.UserId);
-        }
-
-        InvoiceItem? nextCartItem = nextCart.InvoiceItems.FirstOrDefault();
-
-        if (nextCartItem == null)
-        {
-            throw new InvoiceItemNotFoundException(nextCart.Id, dto.ProductId);
+            throw new NextCartItemNotFoundException(dto.UserId, dto.ProductId);
         }
 
         nextCartItem.IsDeleted = true;
@@ -128,15 +103,12 @@ internal sealed class NextCartService : INextCartService
             .Where(i => i.UserId == userId && i.State == InvoiceState.NextCartState);
     }
 
-    private IQueryable<Invoice> FetchNextCartWithItems(int userId)
+    private Task<InvoiceItem?> GetNextCartItem(int userId, int productId)
     {
-        return FetchNextCart(userId)
-            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted));
-    }
+        IQueryable<long> invoiceIds = FetchNextCart(userId).Select(i => i.Id);
 
-    private IQueryable<Invoice> FetchNextCartWithSingleItem(int userId, int productId)
-    {
-        return FetchNextCart(userId)
-            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted && item.ProductId == productId));
+        return _dbContext.Set<InvoiceItem>()
+            .Where(item => item.ProductId == productId && invoiceIds.Contains(item.InvoiceId))
+            .FirstOrDefaultAsync();
     }
 }

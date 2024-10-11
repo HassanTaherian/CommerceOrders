@@ -17,5 +17,7 @@ public interface ICartService
 
     Task SetAddress(AddressInvoiceDataDto addressInvoiceDataDto);
     
-    Task<InvoiceItem?> GetCartItem(int userId, int productId);
+    Task<InvoiceItem> GetCartItem(int userId, int productId);
+    
+    Task<long> GetCartId(int userId);
 }

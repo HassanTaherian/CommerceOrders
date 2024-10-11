@@ -1,5 +1,6 @@
 ﻿using CommerceOrders.Contracts.UI.Address;
 using CommerceOrders.Contracts.UI.Cart;
+using CommerceOrders.Domain.Exceptions.Carts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommerceOrders.Services.Services;
@@ -83,42 +84,20 @@ internal class CartService : ICartService
             throw new CartItemQuantityOutOfRangeInputException();
         }
 
-        var cart = await GetCartWithSingleItem(dto.UserId, dto.ProductId);
+        InvoiceItem cartItem = await GetCartItem(dto.UserId, dto.ProductId);
 
-        if (cart is null)
-        {
-            throw new CartNotFoundException(dto.UserId);
-        }
-
-        if (cart.InvoiceItems.Count == 0)
-        {
-            throw new InvoiceItemNotFoundException(cart.Id, dto.ProductId);
-        }
-
-        var item = cart.InvoiceItems.First();
-
-        item.Quantity = dto.Quantity;
-        item.IsDeleted = false;
+        cartItem.Quantity = dto.Quantity;
+        cartItem.IsDeleted = false;
 
         await _uow.SaveChangesAsync();
     }
 
     public async Task DeleteCartItem(DeleteProductRequestDto dto)
     {
-        var cart = await GetCartWithSingleItem(dto.UserId, dto.ProductId);
-
-        if (cart is null)
-        {
-            throw new CartNotFoundException(dto.UserId);
-        }
-
-        if (cart.InvoiceItems.Count == 0)
-        {
-            throw new InvoiceItemNotFoundException(cart.Id, dto.ProductId);
-        }
-
-        cart.InvoiceItems.First().IsDeleted = true;
-
+        InvoiceItem cartItem = await GetCartItem(dto.UserId, dto.ProductId);
+        
+        cartItem.IsDeleted = true;
+        
         await _uow.SaveChangesAsync();
     }
 
@@ -190,15 +169,37 @@ internal class CartService : ICartService
         await _uow.SaveChangesAsync();
     }
 
-    public Task<InvoiceItem?> GetCartItem(int userId, int productId)
+    public async Task<InvoiceItem> GetCartItem(int userId, int productId)
     {
         IQueryable<long> invoiceIds = _uow.Set<Invoice>()
             .Where(i => i.UserId == userId &&
                         i.State == InvoiceState.CartState)
             .Select(i => i.Id);
-        
-        return _uow.Set<InvoiceItem>()
+
+        InvoiceItem? cartItem = await _uow.Set<InvoiceItem>()
             .Where(item => item.ProductId == productId && invoiceIds.Contains(item.InvoiceId))
             .FirstOrDefaultAsync();
+
+        if (cartItem is null)
+        {
+            throw new CartItemNotFoundException(userId, productId);
+        }
+
+        return cartItem;
+    }
+
+    public async Task<long> GetCartId(int userId)
+    {
+        long id = await _uow.Set<Invoice>()
+            .Where(i => i.UserId == userId && i.State == InvoiceState.CartState)
+            .Select(i => i.Id)
+            .FirstOrDefaultAsync();
+
+        if (id == default)
+        {
+            throw new CartNotFoundException(userId);
+        }
+
+        return id;
     }
 }
