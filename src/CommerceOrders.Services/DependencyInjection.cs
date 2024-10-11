@@ -9,7 +9,7 @@ public static class DependencyInjection
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IReturningService, ReturningService>();
-        services.AddScoped<IDiscountService, DiscountService>();
+        services.AddScoped<ICartDiscountService, CartDiscountService>();
         services.AddScoped<INextCartService, NextCartService>();
         services.AddScoped<IRecommendService, RecommendService>();
         services.AddSingleton<IHttpProvider, HttpProvider>();

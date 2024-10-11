@@ -3,11 +3,11 @@
 namespace CommerceOrders.Api.Controllers;
 
 [ApiController, Route("api/[controller]")]
-public class DiscountController : ControllerBase
+public class CartDiscountController : ControllerBase
 {
-    private readonly IDiscountService _discountService;
+    private readonly ICartDiscountService _discountService;
 
-    public DiscountController(IDiscountService discountService)
+    public CartDiscountController(ICartDiscountService discountService)
     {
         _discountService = discountService;
     }
@@ -15,7 +15,7 @@ public class DiscountController : ControllerBase
     [HttpPatch]
     public async Task<IActionResult> ApplyDiscountCode([FromBody] DiscountCodeRequestDto discountCodeRequestDto)
     {
-        await _discountService.ApplyDiscountCode(discountCodeRequestDto);
+        await _discountService.Apply(discountCodeRequestDto);
         return Ok();
     }
 }

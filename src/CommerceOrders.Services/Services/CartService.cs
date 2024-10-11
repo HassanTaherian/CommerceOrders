@@ -9,7 +9,7 @@ internal class CartService : ICartService
 {
     private readonly IApplicationDbContext _uow;
 
-    public CartService(IApplicationDbContext uow)
+    public CartService(IApplicationDbContext uow, IMarketingAdapter marketingAdapter)
     {
         _uow = uow;
     }
@@ -95,9 +95,9 @@ internal class CartService : ICartService
     public async Task DeleteCartItem(DeleteProductRequestDto dto)
     {
         InvoiceItem cartItem = await GetCartItem(dto.UserId, dto.ProductId);
-        
+
         cartItem.IsDeleted = true;
-        
+
         await _uow.SaveChangesAsync();
     }
 
@@ -111,7 +111,10 @@ internal class CartService : ICartService
 
     public async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId)
     {
-        var cart = await GetCartWithItems(userId, false);
+        Invoice? cart = await FetchCartWithItems(userId, false)
+                .AsNoTracking()
+                .FirstOrDefaultAsync()
+            ;
 
         if (cart is null)
         {
@@ -123,7 +126,9 @@ internal class CartService : ICartService
 
     public async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetDeletedCartItems(int userId)
     {
-        Invoice? cart = await GetCartWithItems(userId, true);
+        Invoice? cart = await FetchCartWithItems(userId, true)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
 
         if (cart is null)
         {
@@ -133,13 +138,18 @@ internal class CartService : ICartService
         return MapInvoiceItemToWatchInvoiceItemsResponseDto(cart.InvoiceItems);
     }
 
-    private Task<Invoice?> GetCartWithItems(int userId, bool isDeleted)
+    private IQueryable<Invoice> FetchCartWithItems(int userId, bool isDeleted)
     {
         return _uow.Set<Invoice>()
             .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == isDeleted))
-            .AsNoTracking()
-            .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
-                                            invoice.State == InvoiceState.CartState);
+            .Where(invoice => invoice.UserId == userId &&
+                              invoice.State == InvoiceState.CartState);
+    }
+
+    public Task<Invoice?> GetCartWithItems(int userId)
+    {
+        return FetchCartWithItems(userId, false)
+            .FirstOrDefaultAsync();
     }
 
     private static IEnumerable<WatchInvoiceItemsResponseDto> MapInvoiceItemToWatchInvoiceItemsResponseDto(

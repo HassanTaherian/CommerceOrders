@@ -20,4 +20,6 @@ public interface ICartService
     Task<InvoiceItem> GetCartItem(int userId, int productId);
     
     Task<long> GetCartId(int userId);
+
+    Task<Invoice?> GetCartWithItems(int userId);
 }
