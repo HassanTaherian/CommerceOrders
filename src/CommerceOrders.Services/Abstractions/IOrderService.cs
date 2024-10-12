@@ -9,6 +9,6 @@ public interface IOrderService
 
     Task<IEnumerable<OrderQueryResponse>> GetOrders(int userId);
 
-    Task<IEnumerable<InvoiceItemResponseDto>> GetInvoiceItemsOfInvoice(long invoiceId);
+    Task<OrderWithItemsQueryResponse> GetOrderWithItems(long invoiceId);
 
 }

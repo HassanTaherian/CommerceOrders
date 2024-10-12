@@ -62,7 +62,7 @@ internal class ReturningService : IReturningService
 
         return invoiceItems;
     }
-    public async Task<IEnumerable<InvoiceItemResponseDto>> ReturnedInvoiceItems(long invoiceId)
+    public async Task<IEnumerable<OrderItemQueryResponse>> ReturnedInvoiceItems(long invoiceId)
     {
         var returnedOrder = await _invoiceRepository.GetInvoiceById(invoiceId);
 

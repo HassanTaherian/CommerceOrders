@@ -17,15 +17,19 @@ internal static class OrderMapper
             new OrderQueryResponse(order.Id, order.CreatedAt, order.DiscountCode, order.AddressId!.Value));
     }
 
-    public static IEnumerable<InvoiceItemResponseDto> MapInvoiceItemsToInvoiceItemResponseDtos(
+    public static IEnumerable<OrderItemQueryResponse> MapInvoiceItemsToInvoiceItemResponseDtos(
         IEnumerable<InvoiceItem> invoiceItems)
     {
-        return invoiceItems.Select(invoiceItem => new InvoiceItemResponseDto
-        {
-            ProductId = invoiceItem.ProductId,
-            Quantity = invoiceItem.Quantity,
-            UnitPrice = invoiceItem.OriginalPrice,
-            NewPrice = invoiceItem.FinalPrice
-        });
+        return invoiceItems.Select(item =>
+            new OrderItemQueryResponse(item.ProductId, item.OriginalPrice, item.Quantity, item.FinalPrice!.Value));
+    }
+
+    public static IQueryable<OrderWithItemsQueryResponse> ToOrderWithItemsQueryResponse(this IQueryable<Invoice> orders)
+    {
+        return orders.Select(order =>
+            new OrderWithItemsQueryResponse(order.Id, order.CreatedAt, order.DiscountCode, order.AddressId!.Value,
+                order.InvoiceItems.Select(item =>
+                    new OrderItemQueryResponse(item.ProductId, item.OriginalPrice, item.Quantity,
+                        item.FinalPrice!.Value))));
     }
 }

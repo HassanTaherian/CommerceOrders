@@ -1,5 +1,6 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Checkout;
+using CommerceOrders.Domain.Exceptions.Order;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommerceOrders.Services.Services;
@@ -71,15 +72,20 @@ internal class OrderService : IOrderService
         return orders;
     }
 
-    public async Task<IEnumerable<InvoiceItemResponseDto>> GetInvoiceItemsOfInvoice(long invoiceId)
+    public async Task<OrderWithItemsQueryResponse> GetOrderWithItems(long orderId)
     {
-        var invoiceItems = await _invoiceRepository.GetNotDeleteItems(invoiceId);
-        // Todo: Check null in Repository
-        if (invoiceItems == null)
+        OrderWithItemsQueryResponse? order = await _uow.Set<Invoice>()
+            .AsNoTracking()
+            .Where(o => o.Id == orderId)
+            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == false))
+            .ToOrderWithItemsQueryResponse()
+            .FirstOrDefaultAsync();
+
+        if (order is null)
         {
-            throw new EmptyInvoiceException(invoiceId);
+            throw new OrderNotFoundException(orderId);
         }
 
-        return OrderMapper.MapInvoiceItemsToInvoiceItemResponseDtos(invoiceItems);
+        return order;
     }
 }
