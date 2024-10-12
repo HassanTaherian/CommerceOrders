@@ -2,19 +2,22 @@
 
 namespace CommerceOrders.Services.Mappers;
 
-internal class OrderMapper
+internal static class OrderMapper
 {
-    public List<InvoiceResponseDto> MapInvoicesToInvoiceResponseDtos(IEnumerable<Invoice> invoices)
+    public static List<OrderQueryResponse> MapInvoicesToOrderDtos(IEnumerable<Invoice> invoices)
     {
-        return invoices.Select(invoice => new InvoiceResponseDto
-        {
-            InvoiceId = invoice.Id,
-            DateTime = invoice.CreatedAt
-        })
+        return invoices.Select(order =>
+                new OrderQueryResponse(order.Id, order.CreatedAt, order.DiscountCode, order.AddressId!.Value))
             .ToList();
     }
 
-    public IEnumerable<InvoiceItemResponseDto> MapInvoiceItemsToInvoiceItemResponseDtos(
+    public static IQueryable<OrderQueryResponse> ToOrderQueryResponse(this IQueryable<Invoice> invoices)
+    {
+        return invoices.Select(order =>
+            new OrderQueryResponse(order.Id, order.CreatedAt, order.DiscountCode, order.AddressId!.Value));
+    }
+
+    public static IEnumerable<InvoiceItemResponseDto> MapInvoiceItemsToInvoiceItemResponseDtos(
         IEnumerable<InvoiceItem> invoiceItems)
     {
         return invoiceItems.Select(invoiceItem => new InvoiceItemResponseDto

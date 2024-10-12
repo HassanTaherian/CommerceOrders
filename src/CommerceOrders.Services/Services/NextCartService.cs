@@ -88,7 +88,7 @@ internal sealed class NextCartService : INextCartService
         {
             UserId = userId,
             InvoiceItems = new List<InvoiceItem>(),
-            State = InvoiceState.NextCartState
+            State = InvoiceState.NextCart
         };
         _uow.Set<Invoice>()
             .Add(nextCart);
@@ -98,7 +98,7 @@ internal sealed class NextCartService : INextCartService
     private IQueryable<Invoice> FetchNextCart(int userId)
     {
         return _uow.Set<Invoice>()
-            .Where(i => i.UserId == userId && i.State == InvoiceState.NextCartState);
+            .Where(i => i.UserId == userId && i.State == InvoiceState.NextCart);
     }
 
     private Task<InvoiceItem?> GetNextCartItem(int userId, int productId)

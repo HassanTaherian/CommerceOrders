@@ -53,7 +53,7 @@ internal class InvoiceRepository : IInvoiceRepository
 
     public Invoice? FetchCart(int userId)
     {
-        return GetInvoiceByState(userId, InvoiceState.CartState).FirstOrDefault();
+        return GetInvoiceByState(userId, InvoiceState.Cart).FirstOrDefault();
     }
 
     public Task<Invoice?> FetchNextCart(int userId)
@@ -61,7 +61,7 @@ internal class InvoiceRepository : IInvoiceRepository
         return _dbContext.Invoices
             .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted))
             .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
-                                            invoice.State == InvoiceState.NextCartState);
+                                            invoice.State == InvoiceState.NextCart);
     }
 
     public async Task<InvoiceItem> GetProductOfInvoice(long invoiceId, int productId)
@@ -91,7 +91,7 @@ internal class InvoiceRepository : IInvoiceRepository
         return _dbContext.Invoices
             .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == isDeleted))
             .Where(invoice => invoice.UserId == userId &&
-                              invoice.State == InvoiceState.CartState);
+                              invoice.State == InvoiceState.Cart);
     }
 
     public Task<Invoice?> FetchCartWithItems(int userId)

@@ -85,7 +85,7 @@ internal class RecommendService : IRecommendService
         return _invoiceRepository.GetInvoices()
             .Any(invoice => invoice != null &&
             invoice.UserId == userId &&
-            invoice.State is InvoiceState.OrderState or InvoiceState.ReturnState
+            invoice.State is InvoiceState.Order or InvoiceState.Returned
             );
     }
 
@@ -100,9 +100,9 @@ internal class RecommendService : IRecommendService
     private IEnumerable<Invoice?> GetOrderAndReturnInvoicesOfUser(int userId)
     {
         var orderInvoices =
-            _invoiceRepository.GetInvoiceByState(userId, InvoiceState.OrderState);
+            _invoiceRepository.GetInvoiceByState(userId, InvoiceState.Order);
         var returnInvoices =
-            _invoiceRepository.GetInvoiceByState(userId, InvoiceState.ReturnState);
+            _invoiceRepository.GetInvoiceByState(userId, InvoiceState.Returned);
 
         var invoices = orderInvoices.Concat(returnInvoices).ToList();
 

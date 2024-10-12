@@ -8,10 +8,12 @@ namespace CommerceOrders.Services.Services;
 internal class CartService : ICartService
 {
     private readonly IApplicationDbContext _uow;
+    private readonly InvoiceService _invoiceService;
 
-    public CartService(IApplicationDbContext uow)
+    public CartService(IApplicationDbContext uow, InvoiceService invoiceService)
     {
         _uow = uow;
+        _invoiceService = invoiceService;
     }
 
     public async Task AddCart(AddProductRequestDto dto)
@@ -40,7 +42,7 @@ internal class CartService : ICartService
         var cart = new Invoice
         {
             UserId = userId,
-            State = InvoiceState.CartState,
+            State = InvoiceState.Cart,
             InvoiceItems = new List<InvoiceItem>
             {
                 new()
@@ -203,7 +205,6 @@ internal class CartService : ICartService
 
     private IQueryable<Invoice> QueryCart(int userId)
     {
-        return _uow.Set<Invoice>()
-            .Where(i => i.UserId == userId && i.State == InvoiceState.CartState);
+        return _invoiceService.GetInvoices(userId, InvoiceState.Cart);
     }
 }

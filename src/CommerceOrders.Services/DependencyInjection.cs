@@ -20,9 +20,4 @@ public static class DependencyInjection
         services.AddScoped<IProductAdapter, ProductAdapter>();
         services.AddScoped<IMarketingAdapter, MarketingAdapter>();
     }
-    
-    public static void AddMappers(this IServiceCollection services)
-    {
-        services.AddScoped<OrderMapper>();
-    }
 }

@@ -2,8 +2,8 @@
 
 public enum InvoiceState : byte
 {
-    CartState,
-    NextCartState,
-    OrderState,
-    ReturnState
+    Cart,
+    NextCart,
+    Order,
+    Returned
 }

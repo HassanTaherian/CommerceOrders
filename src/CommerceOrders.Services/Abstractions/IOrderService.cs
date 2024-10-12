@@ -7,7 +7,7 @@ public interface IOrderService
 {
     Task Checkout(CheckoutRequestDto dto);
 
-    List<InvoiceResponseDto> GetAllOrdersOfUser(int userId);
+    Task<IEnumerable<OrderQueryResponse>> GetOrders(int userId);
 
     Task<IEnumerable<InvoiceItemResponseDto>> GetInvoiceItemsOfInvoice(long invoiceId);
 

@@ -21,7 +21,6 @@ builder.Services.AddDbContext<InvoiceDbContext, InvoiceDbContext>(options =>
 builder.Services.AddPersistenceServices();
 builder.Services.AddBusinessServices();
 builder.Services.AddExternalServices();
-builder.Services.AddMappers();
 // TODO: Inject HttpClient
 
 var app = builder.Build();

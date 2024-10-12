@@ -10,16 +10,13 @@ internal class ReturningService : IReturningService
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly IProductAdapter _productAdapter;
     private readonly IMarketingAdapter _marketingAdapter;
-    private readonly OrderMapper _orderMapper;
 
-    public ReturningService(IUnitOfWork unitOfWork, IProductAdapter productAdapter, IMarketingAdapter marketingAdapter,
-        OrderMapper orderMapper)
+    public ReturningService(IUnitOfWork unitOfWork, IProductAdapter productAdapter, IMarketingAdapter marketingAdapter)
     {
         _unitOfWork = unitOfWork;
         _invoiceRepository = _unitOfWork.InvoiceRepository;
         _productAdapter = productAdapter;
         _marketingAdapter = marketingAdapter;
-        _orderMapper = orderMapper;
     }
 
     public async Task Return(ReturningRequestDto returningRequestDto)
@@ -28,19 +25,19 @@ internal class ReturningService : IReturningService
 
         switch (order.State)
         {
-            case InvoiceState.ReturnState:
+            case InvoiceState.Returned:
                 throw new AlreadyReturnedException(returningRequestDto.InvoiceId);
-            case InvoiceState.CartState:
+            case InvoiceState.Cart:
                 throw new InvoiceIsInCartStateException(returningRequestDto.InvoiceId);
         }
 
         var invoiceItems = await ChangeStateOfProductItemsToReturned(returningRequestDto.ProductIds, returningRequestDto.InvoiceId);
 
         await _productAdapter.UpdateCountingOfProduct(invoiceItems, ProductCountingState.ReturnState);
-        await _marketingAdapter.SendInvoiceToMarketing(order, InvoiceState.ReturnState);
+        await _marketingAdapter.SendInvoiceToMarketing(order, InvoiceState.Returned);
 
         order.ReturnedAt = DateTime.Now;
-        order.State = InvoiceState.ReturnState;
+        order.State = InvoiceState.Returned;
 
         _invoiceRepository.UpdateInvoice(order);
         await _unitOfWork.SaveChangesAsync();
@@ -75,19 +72,19 @@ internal class ReturningService : IReturningService
         }
 
         var returnedInvoiceItems = returnedOrder.InvoiceItems.Where(invoiceItem => invoiceItem.IsReturned);
-        var invoiceItemResponseDtos = _orderMapper.MapInvoiceItemsToInvoiceItemResponseDtos(returnedInvoiceItems);
+        var invoiceItemResponseDtos = OrderMapper.MapInvoiceItemsToInvoiceItemResponseDtos(returnedInvoiceItems);
 
         return invoiceItemResponseDtos;
     }
 
-    public List<InvoiceResponseDto> ReturnInvoices(int userId)
+    public List<OrderQueryResponse> ReturnInvoices(int userId)
     {
-        var invoices = _invoiceRepository.GetInvoiceByState(userId, InvoiceState.ReturnState);
+        var invoices = _invoiceRepository.GetInvoiceByState(userId, InvoiceState.Returned);
         if (invoices == null)
         {
             throw new InvoiceNotFoundException(userId);
         }
 
-        return _orderMapper.MapInvoicesToInvoiceResponseDtos(invoices);
+        return OrderMapper.MapInvoicesToOrderDtos(invoices);
     }
 }

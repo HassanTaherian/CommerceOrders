@@ -1,23 +1,25 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Checkout;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommerceOrders.Services.Services;
 
 internal class OrderService : IOrderService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IInvoiceRepository _invoiceRepository;
+    private readonly IApplicationDbContext _uow;
+    private readonly InvoiceService _invoiceService;
     private readonly IProductAdapter _productAdapter;
     private readonly IMarketingAdapter _marketingAdapter;
-    private readonly OrderMapper _orderMapper;
+    private readonly IInvoiceRepository _invoiceRepository;
 
-    public OrderService(IUnitOfWork unitOfWork, IMarketingAdapter marketingAdapter, IProductAdapter productAdapter, OrderMapper orderMapper)
+    public OrderService(IApplicationDbContext uow, InvoiceService invoiceService, IMarketingAdapter marketingAdapter,
+        IProductAdapter productAdapter, IInvoiceRepository invoiceRepository)
     {
-        _unitOfWork = unitOfWork;
-        _invoiceRepository = _unitOfWork.InvoiceRepository;
         _marketingAdapter = marketingAdapter;
         _productAdapter = productAdapter;
-        _orderMapper = orderMapper;
+        _invoiceRepository = invoiceRepository;
+        _invoiceService = invoiceService;
+        _uow = uow;
     }
 
     public async Task Checkout(CheckoutRequestDto dto)
@@ -28,12 +30,12 @@ internal class OrderService : IOrderService
         var notDeletedItems = await _invoiceRepository.GetNotDeleteItems(cart.Id);
 
         await _productAdapter.UpdateCountingOfProduct(notDeletedItems, ProductCountingState.ShopState);
-        await _marketingAdapter.SendInvoiceToMarketing(cart, InvoiceState.OrderState);
+        await _marketingAdapter.SendInvoiceToMarketing(cart, InvoiceState.Order);
 
-        cart.State = InvoiceState.OrderState;
+        cart.State = InvoiceState.Order;
         cart.CreatedAt = DateTime.Now;
         _invoiceRepository.UpdateInvoice(cart);
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
     }
 
     private void ValidateCart(Invoice cart)
@@ -54,16 +56,19 @@ internal class OrderService : IOrderService
         return cart.InvoiceItems.Any(invoiceItem => invoiceItem.IsDeleted == false);
     }
 
-    public List<InvoiceResponseDto> GetAllOrdersOfUser(int userId)
+    public async Task<IEnumerable<OrderQueryResponse>> GetOrders(int userId)
     {
-        var invoices = _invoiceRepository.GetInvoiceByState(userId, InvoiceState.OrderState);
-        // Todo: Check null in Repository
-        if (invoices is null)
+        List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
+            .AsNoTracking()
+            .ToOrderQueryResponse()
+            .ToListAsync();
+
+        if (orders.Count == 0)
         {
-            throw new InvoiceNotFoundException(userId);
+            return Enumerable.Empty<OrderQueryResponse>();
         }
 
-        return _orderMapper.MapInvoicesToInvoiceResponseDtos(invoices);
+        return orders;
     }
 
     public async Task<IEnumerable<InvoiceItemResponseDto>> GetInvoiceItemsOfInvoice(long invoiceId)
@@ -75,6 +80,6 @@ internal class OrderService : IOrderService
             throw new EmptyInvoiceException(invoiceId);
         }
 
-        return _orderMapper.MapInvoiceItemsToInvoiceItemResponseDtos(invoiceItems);
+        return OrderMapper.MapInvoiceItemsToInvoiceItemResponseDtos(invoiceItems);
     }
 }
