@@ -28,9 +28,9 @@ public class OrderController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Checkout(CheckoutRequestDto checkout)
+    public async Task<IActionResult> Checkout(CheckoutCommandRequest request)
     {
-        await _orderService.Checkout(checkout);
+        await _orderService.Checkout(request);
         return Ok();
     }
 }

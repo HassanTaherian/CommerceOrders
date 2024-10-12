@@ -5,7 +5,7 @@ namespace CommerceOrders.Services.Abstractions;
 
 public interface IOrderService
 {
-    Task Checkout(CheckoutRequestDto dto);
+    Task Checkout(CheckoutCommandRequest request);
 
     Task<IEnumerable<OrderQueryResponse>> GetOrders(int userId);
 

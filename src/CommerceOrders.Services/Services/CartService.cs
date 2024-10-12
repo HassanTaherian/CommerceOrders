@@ -148,7 +148,7 @@ internal class CartService : ICartService
     public Task<Invoice?> GetCartWithItems(int userId)
     {
         return QueryCart(userId)
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == true))
+            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted))
             .FirstOrDefaultAsync();
     }
 

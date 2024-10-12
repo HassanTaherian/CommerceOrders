@@ -1,6 +1,6 @@
 ﻿namespace CommerceOrders.Contracts.UI.Order.Checkout;
 
-public class CheckoutRequestDto
+public class CheckoutCommandRequest
 {
     public int UserId { get; set; }
 }

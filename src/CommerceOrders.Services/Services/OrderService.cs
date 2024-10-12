@@ -11,52 +11,51 @@ internal class OrderService : IOrderService
     private readonly InvoiceService _invoiceService;
     private readonly IProductAdapter _productAdapter;
     private readonly IMarketingAdapter _marketingAdapter;
-    private readonly IInvoiceRepository _invoiceRepository;
+    private readonly ICartService _cartService;
 
     public OrderService(IApplicationDbContext uow, InvoiceService invoiceService, IMarketingAdapter marketingAdapter,
-        IProductAdapter productAdapter, IInvoiceRepository invoiceRepository)
+        IProductAdapter productAdapter, ICartService cartService)
     {
         _marketingAdapter = marketingAdapter;
         _productAdapter = productAdapter;
-        _invoiceRepository = invoiceRepository;
+        _cartService = cartService;
         _invoiceService = invoiceService;
         _uow = uow;
     }
 
-    public async Task Checkout(CheckoutRequestDto dto)
+    public async Task Checkout(CheckoutCommandRequest request)
     {
-        var cart = _invoiceRepository.FetchCart(dto.UserId);
-        ValidateCart(cart);
-
-        var notDeletedItems = await _invoiceRepository.GetNotDeleteItems(cart.Id);
-
-        await _productAdapter.UpdateCountingOfProduct(notDeletedItems, ProductCountingState.ShopState);
-        await _marketingAdapter.SendInvoiceToMarketing(cart, InvoiceState.Order);
-
+        Invoice? cart = await _cartService.GetCartWithItems(request.UserId);
+        
+        ValidateCart(cart, request);
+        
+        await _productAdapter.UpdateCountingOfProduct(cart!.InvoiceItems, ProductCountingState.ShopState);
+        
         cart.State = InvoiceState.Order;
         cart.CreatedAt = DateTime.Now;
-        _invoiceRepository.UpdateInvoice(cart);
         await _uow.SaveChangesAsync();
+        
+        await _marketingAdapter.SendInvoiceToMarketing(cart, InvoiceState.Order);
     }
 
-    private void ValidateCart(Invoice cart)
+    private static void ValidateCart(Invoice? cart, CheckoutCommandRequest request)
     {
+        if (cart is null)
+        {
+            throw new CartNotFoundException(request.UserId);
+        }
+        
         if (cart.AddressId is null)
         {
             throw new AddressNotSpecifiedException(cart.UserId);
         }
 
-        if (!CartHasItem(cart))
+        if (cart.InvoiceItems.Count == 0)
         {
             throw new EmptyCartException(cart.UserId);
         }
     }
-
-    private bool CartHasItem(Invoice cart)
-    {
-        return cart.InvoiceItems.Any(invoiceItem => invoiceItem.IsDeleted == false);
-    }
-
+    
     public async Task<IEnumerable<OrderQueryResponse>> GetOrders(int userId)
     {
         List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
