@@ -29,12 +29,7 @@ internal class InvoiceRepository : IInvoiceRepository
 
         return invoice;
     }
-
-    public void Add(Invoice invoice)
-    {
-        _dbContext.Invoices.Add(invoice);
-    }
-
+    
     public Invoice UpdateInvoice(Invoice invoice)
     {
         _dbContext.Invoices.Attach(invoice);
@@ -51,19 +46,6 @@ internal class InvoiceRepository : IInvoiceRepository
         
     }
 
-    public Invoice? FetchCart(int userId)
-    {
-        return GetInvoiceByState(userId, InvoiceState.Cart).FirstOrDefault();
-    }
-
-    public Task<Invoice?> FetchNextCart(int userId)
-    {
-        return _dbContext.Invoices
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted))
-            .FirstOrDefaultAsync(invoice => invoice.UserId == userId &&
-                                            invoice.State == InvoiceState.NextCart);
-    }
-
     public async Task<InvoiceItem> GetProductOfInvoice(long invoiceId, int productId)
     {
         var invoice = await GetInvoiceById(invoiceId);
@@ -75,27 +57,5 @@ internal class InvoiceRepository : IInvoiceRepository
         }
 
         return invoiceItem;
-    }
-
-    public async Task<IEnumerable<InvoiceItem>> GetNotDeleteItems(long invoiceId)
-    {
-        var invoice = await GetInvoiceById(invoiceId);
-
-        var invoiceItems = invoice.InvoiceItems.Where(item => item.IsDeleted == false);
-
-        return invoiceItems;
-    }
-
-    private IQueryable<Invoice> FetchCartWithItems(int userId, bool isDeleted)
-    {
-        return _dbContext.Invoices
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == isDeleted))
-            .Where(invoice => invoice.UserId == userId &&
-                              invoice.State == InvoiceState.Cart);
-    }
-
-    public Task<Invoice?> FetchCartWithItems(int userId)
-    {
-        return FetchCartWithItems(userId, false).FirstOrDefaultAsync();
     }
 }
