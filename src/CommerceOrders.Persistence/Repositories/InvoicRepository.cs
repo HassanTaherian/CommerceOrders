@@ -53,7 +53,7 @@ internal class InvoiceRepository : IInvoiceRepository
 
         if (invoiceItem is null)
         {
-            throw new InvoiceItemNotFoundException(invoiceId, productId);
+            throw new OrderItemNotFoundException(invoiceId, productId);
         }
 
         return invoiceItem;

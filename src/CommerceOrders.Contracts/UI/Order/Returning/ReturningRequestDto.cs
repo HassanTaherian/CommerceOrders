@@ -2,6 +2,6 @@
 
 public class ReturningRequestDto
 {
-    public long InvoiceId { get; set; }
+    public long OrderId { get; set; }
     public ICollection<int> ProductIds { get; set; }
 }

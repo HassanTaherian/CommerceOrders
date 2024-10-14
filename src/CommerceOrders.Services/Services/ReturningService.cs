@@ -8,73 +8,75 @@ namespace CommerceOrders.Services.Services;
 
 internal class ReturningService : IReturningService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IInvoiceRepository _invoiceRepository;
     private readonly IProductAdapter _productAdapter;
     private readonly IMarketingAdapter _marketingAdapter;
     private readonly InvoiceService _invoiceService;
-    private readonly IApplicationDbContext _dbContext;
+    private readonly IApplicationDbContext _uow;
 
     public ReturningService(IUnitOfWork unitOfWork, IProductAdapter productAdapter, IMarketingAdapter marketingAdapter,
-        InvoiceService invoiceService, IApplicationDbContext dbContext)
+        InvoiceService invoiceService, IApplicationDbContext uow)
     {
-        _unitOfWork = unitOfWork;
-        _invoiceRepository = _unitOfWork.InvoiceRepository;
         _productAdapter = productAdapter;
         _marketingAdapter = marketingAdapter;
         _invoiceService = invoiceService;
-        _dbContext = dbContext;
+        _uow = uow;
     }
 
-    public async Task Return(ReturningRequestDto returningRequestDto)
+    public async Task Return(ReturningRequestDto dto)
     {
-        var order = await _invoiceRepository.GetInvoiceById(returningRequestDto.InvoiceId);
+        Invoice? order = await _uow.Set<Invoice>()
+            .Include(i => i.InvoiceItems.Where(item => !item.IsDeleted))
+            .Where(i => i.Id == dto.OrderId)
+            .FirstOrDefaultAsync();
+
+        if (order is null)
+        {
+            throw new OrderNotFoundException(dto.OrderId);
+        }
 
         switch (order.State)
         {
             case InvoiceState.Returned:
-                throw new AlreadyReturnedException(returningRequestDto.InvoiceId);
+                throw new AlreadyReturnedException(dto.OrderId);
+            case InvoiceState.NextCart:
             case InvoiceState.Cart:
-                throw new InvoiceIsInCartStateException(returningRequestDto.InvoiceId);
+                throw new OrderNotFoundException(dto.OrderId);
+            case InvoiceState.Order:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
-        var invoiceItems =
-            await ChangeStateOfProductItemsToReturned(returningRequestDto.ProductIds, returningRequestDto.InvoiceId);
+        ReturnOrderItems(dto.ProductIds, order);
 
-        await _productAdapter.UpdateCountingOfProduct(invoiceItems, ProductCountingState.ReturnState);
-        await _marketingAdapter.SendInvoiceToMarketing(order, InvoiceState.Returned);
+        IEnumerable<InvoiceItem> returnedItems = order.InvoiceItems.Where(item => item.IsReturned);
+        await _productAdapter.UpdateCountingOfProduct(returnedItems, ProductCountingState.ReturnState);
 
         order.ReturnedAt = DateTime.Now;
         order.State = InvoiceState.Returned;
 
-        _invoiceRepository.UpdateInvoice(order);
-        await _unitOfWork.SaveChangesAsync();
+        await _uow.SaveChangesAsync();
+        await _marketingAdapter.SendInvoiceToMarketing(order, InvoiceState.Returned);
     }
 
-    private async Task<List<InvoiceItem>> ChangeStateOfProductItemsToReturned(IEnumerable<int> productIds,
-        long invoiceId)
+    private void ReturnOrderItems(IEnumerable<int> productIds, Invoice order)
     {
-        var invoiceItems = new List<InvoiceItem>();
+        Dictionary<int, InvoiceItem> itemsById = order.InvoiceItems.ToDictionary(item => item.ProductId);
 
-        foreach (var productId in productIds)
+        foreach (int productId in productIds)
         {
-            var invoiceItem = await _invoiceRepository.GetProductOfInvoice(invoiceId, productId);
-
-            if (invoiceItem.IsDeleted)
+            if (itemsById.TryGetValue(productId, out InvoiceItem? invoiceItem))
             {
-                throw new InvoiceItemNotFoundException(invoiceId, productId);
+                throw new OrderItemNotFoundException(order.Id, productId);
             }
 
-            invoiceItem.IsReturned = true;
-            invoiceItems.Add(invoiceItem);
+            invoiceItem!.IsReturned = true;
         }
-
-        return invoiceItems;
     }
 
     public async Task<OrderWithItemsQueryResponse> GetReturnedOrderWithItems(long orderId)
     {
-        OrderWithItemsQueryResponse? order = await _dbContext.Set<Invoice>()
+        OrderWithItemsQueryResponse? order = await _uow.Set<Invoice>()
             .AsNoTracking()
             .Where(o => o.Id == orderId)
             .Include(invoice => invoice.InvoiceItems.Where(item => item.IsReturned))
