@@ -3,7 +3,7 @@ using CommerceOrders.Persistence.EntityConfigs;
 
 namespace CommerceOrders.Persistence;
 
-public class InvoiceDbContext : DbContext, IApplicationDbContext
+public class InvoiceDbContext : DbContext, IUnitOfWork
 {
     public InvoiceDbContext(DbContextOptions<InvoiceDbContext> options) : base(options)
     {

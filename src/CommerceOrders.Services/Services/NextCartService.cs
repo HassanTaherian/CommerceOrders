@@ -7,10 +7,10 @@ namespace CommerceOrders.Services.Services;
 
 internal sealed class NextCartService : INextCartService
 {
-    private readonly IApplicationDbContext _uow;
+    private readonly IUnitOfWork _uow;
     private readonly ICartService _cartService;
 
-    public NextCartService(IApplicationDbContext unitOfWork, ICartService cartService)
+    public NextCartService(IUnitOfWork unitOfWork, ICartService cartService)
     {
         _uow = unitOfWork;
         _cartService = cartService;

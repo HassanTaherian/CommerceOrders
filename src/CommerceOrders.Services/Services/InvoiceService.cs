@@ -4,9 +4,9 @@ namespace CommerceOrders.Services.Services;
 
 internal class InvoiceService
 {
-    private readonly IApplicationDbContext _uow;
+    private readonly IUnitOfWork _uow;
 
-    public InvoiceService(IApplicationDbContext uow)
+    public InvoiceService(IUnitOfWork uow)
     {
         _uow = uow;
     }

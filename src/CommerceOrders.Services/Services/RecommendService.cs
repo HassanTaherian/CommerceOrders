@@ -5,10 +5,10 @@ namespace CommerceOrders.Services.Services;
 
 internal class RecommendService : IRecommendService
 {
-    private readonly IApplicationDbContext _uow;
+    private readonly IUnitOfWork _uow;
     private readonly IProductAdapter _productAdapter;
 
-    public RecommendService(IApplicationDbContext uow, IProductAdapter productAdapter)
+    public RecommendService(IUnitOfWork uow, IProductAdapter productAdapter)
     {
         _uow = uow;
         _productAdapter = productAdapter;

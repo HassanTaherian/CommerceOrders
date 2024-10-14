@@ -7,10 +7,10 @@ namespace CommerceOrders.Services.Services;
 
 internal class CartService : ICartService
 {
-    private readonly IApplicationDbContext _uow;
+    private readonly IUnitOfWork _uow;
     private readonly InvoiceService _invoiceService;
 
-    public CartService(IApplicationDbContext uow, InvoiceService invoiceService)
+    public CartService(IUnitOfWork uow, InvoiceService invoiceService)
     {
         _uow = uow;
         _invoiceService = invoiceService;

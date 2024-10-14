@@ -11,10 +11,10 @@ internal class ReturningService : IReturningService
     private readonly IProductAdapter _productAdapter;
     private readonly IMarketingAdapter _marketingAdapter;
     private readonly InvoiceService _invoiceService;
-    private readonly IApplicationDbContext _uow;
+    private readonly IUnitOfWork _uow;
 
-    public ReturningService(IUnitOfWork unitOfWork, IProductAdapter productAdapter, IMarketingAdapter marketingAdapter,
-        InvoiceService invoiceService, IApplicationDbContext uow)
+    public ReturningService(IProductAdapter productAdapter, IMarketingAdapter marketingAdapter,
+        InvoiceService invoiceService, IUnitOfWork uow)
     {
         _productAdapter = productAdapter;
         _marketingAdapter = marketingAdapter;

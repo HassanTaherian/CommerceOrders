@@ -5,11 +5,11 @@ namespace CommerceOrders.Services.Services;
 
 internal sealed class CartDiscountService : ICartDiscountService
 {
-    private readonly IApplicationDbContext _uow;
+    private readonly IUnitOfWork _uow;
     private readonly IMarketingAdapter _marketingAdapter;
     private readonly ICartService _cartService;
 
-    public CartDiscountService(IApplicationDbContext uow, IMarketingAdapter marketingAdapter, ICartService cartService)
+    public CartDiscountService(IUnitOfWork uow, IMarketingAdapter marketingAdapter, ICartService cartService)
     {
         _uow = uow;
         _marketingAdapter = marketingAdapter;

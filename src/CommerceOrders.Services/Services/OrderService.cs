@@ -7,13 +7,13 @@ namespace CommerceOrders.Services.Services;
 
 internal class OrderService : IOrderService
 {
-    private readonly IApplicationDbContext _uow;
+    private readonly IUnitOfWork _uow;
     private readonly InvoiceService _invoiceService;
     private readonly IProductAdapter _productAdapter;
     private readonly IMarketingAdapter _marketingAdapter;
     private readonly ICartService _cartService;
 
-    public OrderService(IApplicationDbContext uow, InvoiceService invoiceService, IMarketingAdapter marketingAdapter,
+    public OrderService(IUnitOfWork uow, InvoiceService invoiceService, IMarketingAdapter marketingAdapter,
         IProductAdapter productAdapter, ICartService cartService)
     {
         _marketingAdapter = marketingAdapter;
