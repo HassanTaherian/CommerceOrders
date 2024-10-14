@@ -12,11 +12,7 @@ public class RecommendController : Controller
         _recommendService = recommendService;
     }
 
-    // POST: RecommendController/UI
     [HttpPost]
-    public async Task<IActionResult> RecommendUi(RecommendationRequestDto recommendationRequestDto)
-    {
-        var relatedItems = await _recommendService.Recommended(recommendationRequestDto);
-        return Ok(relatedItems);
-    }
+    public async Task<IActionResult> Recommend(RecommendationRequestDto request) =>
+        Ok(await _recommendService.RecommendProducts(request));
 }

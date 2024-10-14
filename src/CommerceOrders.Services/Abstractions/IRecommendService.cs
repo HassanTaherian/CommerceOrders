@@ -5,6 +5,5 @@ namespace CommerceOrders.Services.Abstractions;
 
 public interface IRecommendService
 {
-    public Task<List<ProductRecommendDto>> Recommended(RecommendationRequestDto recommendationRequestDto);
-
+    public Task<IEnumerable<int>> RecommendProducts(RecommendationRequestDto recommendationRequestDto);
 }

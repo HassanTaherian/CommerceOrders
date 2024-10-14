@@ -1,4 +1,5 @@
 ﻿using CommerceOrders.Contracts.Product;
+using CommerceOrders.Contracts.UI.Recommendation;
 
 namespace CommerceOrders.Services.External;
 
@@ -36,5 +37,29 @@ internal class ProductAdapter : IProductAdapter
         }
 
         return countingDtos;
+    }
+
+    public async Task<IEnumerable<int>> GetRelatedProducts(int productId)
+    {
+        ProductRecommendDto mapItem = new()
+        {
+            ProductId = productId
+        };
+
+        JsonBridge<ProductRecommendDto, ProductRecommendDto> jsonBridge =
+            new JsonBridge<ProductRecommendDto, ProductRecommendDto>();
+        var json = jsonBridge.Serialize(mapItem);
+        string response =
+            await _httpProvider.Post("https://localhost:7083/mock/DiscountMock/Recommendation", json);
+
+
+        List<ProductRecommendDto>? result = jsonBridge.DeserializeList(response);
+
+        if (result is null)
+        {
+            throw new Exception("Network not responding!");
+        }
+
+        return result.Select(p => p.ProductId);
     }
 }

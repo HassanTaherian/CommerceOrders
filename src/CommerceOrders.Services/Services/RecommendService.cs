@@ -1,152 +1,53 @@
-﻿using CommerceOrders.Contracts.Product;
-using CommerceOrders.Contracts.UI.Recommendation;
+﻿using CommerceOrders.Contracts.UI.Recommendation;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommerceOrders.Services.Services;
 
 internal class RecommendService : IRecommendService
 {
-    private readonly IInvoiceRepository _invoiceRepository;
-    private readonly IHttpProvider _httpProvider;
+    private readonly IApplicationDbContext _uow;
+    private readonly IProductAdapter _productAdapter;
 
-    public RecommendService(IInvoiceRepository invoiceRepository, IHttpProvider httpProvider)
+    public RecommendService(IApplicationDbContext uow, IProductAdapter productAdapter)
     {
-        _invoiceRepository = invoiceRepository;
-        _httpProvider = httpProvider;
+        _uow = uow;
+        _productAdapter = productAdapter;
     }
 
-    public async Task<List<ProductRecommendDto>> Recommended(RecommendationRequestDto recommendationRequestDto)
+    public async Task<IEnumerable<int>> RecommendProducts(RecommendationRequestDto dto)
     {
-        var items = await FindRelatedProducts(recommendationRequestDto);
-        if (items.Count == 0)
-        {
-            throw new RelatedItemNotFoundException(recommendationRequestDto.ProductId);
-        }
+        IEnumerable<int> relatedProductsFromModule = await _productAdapter.GetRelatedProducts(dto.ProductId);
 
-        return items;
-    }
+        List<int> deletedProducts = await GetDeletedProductsInInvoiceItems(dto.UserId, dto.ProductId);
 
-    private async Task<List<ProductRecommendDto>> FindRelatedProducts(
-        RecommendationRequestDto recommendationRequestDto)
-    {
-        var relatedProductsFromModule = await GetRelatedProductFromProductModule(recommendationRequestDto);
-
-        var productItemsFromDatabase = new List<ProductRecommendDto>();
-
-        if (UserHasAnyInvoice(recommendationRequestDto.UserId))
-        {
-            productItemsFromDatabase = await GetDeletedInvoiceItemsOfUserFromDatabase(recommendationRequestDto);
-        }
-
-        var mostShoppedProducts = MostFrequentShoppedProducts();
-
-        var concatItems = relatedProductsFromModule
-                                                    .Concat(productItemsFromDatabase)
-                                                    .Concat(mostShoppedProducts);
-
-        return concatItems.DistinctBy(product => product.ProductId).ToList();
-    }
-
-    private async Task<List<ProductRecommendDto>> GetRelatedProductFromProductModule(RecommendationRequestDto recommendationRequestDto)
-    {
-        var productsResponse = await SerializeRecommendationRequestDto(recommendationRequestDto);
-
-        return DeserializeRecommendationRequestDto(productsResponse);
-    }
-
-    private async Task<string> SerializeRecommendationRequestDto(RecommendationRequestDto recommendationRequestDto)
-    {
-        var mapItem = new ProductRecommendDto()
-        {
-            ProductId = recommendationRequestDto.ProductId
-        };
-
-        var jsonBridge = new JsonBridge<ProductRecommendDto, ProductRecommendDto>();
-        var json = jsonBridge.Serialize(mapItem);
-        var productResponse =
-            await _httpProvider.Post("https://localhost:7083/mock/DiscountMock/Recommendation", json);
-        return productResponse;
-    }
-
-    private List<ProductRecommendDto> DeserializeRecommendationRequestDto(string productResponseJson)
-    {
-        var jsonBridge = new JsonBridge<ProductRecommendDto, ProductRecommendDto>();
-        var result = jsonBridge.DeserializeList(productResponseJson);
-
-        if (result is null)
-        {
-            throw new Exception("Network not responding!");
-        }
-
-        return result;
-    }
-
-    private bool UserHasAnyInvoice(int userId)
-    {
-        return _invoiceRepository.GetInvoices()
-            .Any(invoice => invoice != null &&
-            invoice.UserId == userId &&
-            invoice.State is InvoiceState.Order or InvoiceState.Returned
-            );
+        var mostShoppedProducts = GetMostFrequentShoppedProducts(5);
+        
+        return relatedProductsFromModule
+            .Concat(deletedProducts)
+            .Concat(mostShoppedProducts)
+            .Distinct();
     }
 
 
-    private async Task<List<ProductRecommendDto>> GetDeletedInvoiceItemsOfUserFromDatabase(RecommendationRequestDto recommendationRequestDto)
+    private Task<List<int>> GetDeletedProductsInInvoiceItems(int userId, int productId)
     {
-        var invoices = GetOrderAndReturnInvoicesOfUser(recommendationRequestDto.UserId);
-
-        return await GetIsDeletedProductItemsOfUser(invoices, recommendationRequestDto.ProductId);
+        return _uow.Set<InvoiceItem>()
+            .Where(item => item.Invoice.UserId == userId)
+            .Where(item => item.IsDeleted && item.ProductId != productId)
+            .Select(item => item.ProductId)
+            .ToListAsync();
     }
 
-    private IEnumerable<Invoice?> GetOrderAndReturnInvoicesOfUser(int userId)
-    {
-        var orderInvoices =
-            _invoiceRepository.GetInvoiceByState(userId, InvoiceState.Order);
-        var returnInvoices =
-            _invoiceRepository.GetInvoiceByState(userId, InvoiceState.Returned);
-
-        var invoices = orderInvoices.Concat(returnInvoices).ToList();
-
-        return invoices;
-    }
-
-    private static Task<List<ProductRecommendDto>> GetIsDeletedProductItemsOfUser(IEnumerable<Invoice?> invoices, int productId)
-    {
-        return Task.FromResult((from invoice in invoices
-                                from invoiceItem in invoice.InvoiceItems
-                                where invoiceItem.IsDeleted && invoiceItem.ProductId != productId
-                                select invoiceItem)
-            .Select(invoiceItem => new ProductRecommendDto
-            { ProductId = invoiceItem.ProductId }).ToList());
-    }
-
-    private IEnumerable<ProductRecommendDto> MostFrequentShoppedProducts()
-    {
-
-        var products = GetMostFrequentShoppedProductsFromDatabase();
-
-
-        return MapIntToProductRecommendDto(products);
-    }
-
-    private IEnumerable<int> GetMostFrequentShoppedProductsFromDatabase()
+    private IEnumerable<int> GetMostFrequentShoppedProducts(int numberOfProducts)
     {
         return
         (
-            from item in _invoiceRepository.GetInvoiceItems()
+            from item in _uow.Set<InvoiceItem>()
             where !item.IsDeleted && !item.IsReturned
             group item by item.ProductId
             into productGroup
             orderby productGroup.Count() descending
             select productGroup.Key
-        ).Take(5);
+        ).Take(numberOfProducts);
     }
-
-    private IEnumerable<ProductRecommendDto> MapIntToProductRecommendDto(IEnumerable<int> Items)
-    {
-        return Items.Select(id => new ProductRecommendDto
-        {
-            ProductId = id
-        });
-    }
-
 }
