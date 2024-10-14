@@ -6,6 +6,6 @@ namespace CommerceOrders.Services.Abstractions;
 public interface IReturningService
 {
     Task Return(ReturningRequestDto dto);
-    List<OrderQueryResponse> ReturnInvoices(int userId);
+    Task<IEnumerable<OrderQueryResponse>> GetReturnedOrders(int userId);
     Task<IEnumerable<OrderItemQueryResponse>> ReturnedInvoiceItems(long invoiceId);
 }

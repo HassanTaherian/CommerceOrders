@@ -1,6 +1,7 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Returning;
 using CommerceOrders.Domain.Exceptions.Returning;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommerceOrders.Services.Services;
 
@@ -10,13 +11,16 @@ internal class ReturningService : IReturningService
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly IProductAdapter _productAdapter;
     private readonly IMarketingAdapter _marketingAdapter;
+    private readonly InvoiceService _invoiceService;
 
-    public ReturningService(IUnitOfWork unitOfWork, IProductAdapter productAdapter, IMarketingAdapter marketingAdapter)
+    public ReturningService(IUnitOfWork unitOfWork, IProductAdapter productAdapter, IMarketingAdapter marketingAdapter,
+        InvoiceService invoiceService)
     {
         _unitOfWork = unitOfWork;
         _invoiceRepository = _unitOfWork.InvoiceRepository;
         _productAdapter = productAdapter;
         _marketingAdapter = marketingAdapter;
+        _invoiceService = invoiceService;
     }
 
     public async Task Return(ReturningRequestDto returningRequestDto)
@@ -31,7 +35,8 @@ internal class ReturningService : IReturningService
                 throw new InvoiceIsInCartStateException(returningRequestDto.InvoiceId);
         }
 
-        var invoiceItems = await ChangeStateOfProductItemsToReturned(returningRequestDto.ProductIds, returningRequestDto.InvoiceId);
+        var invoiceItems =
+            await ChangeStateOfProductItemsToReturned(returningRequestDto.ProductIds, returningRequestDto.InvoiceId);
 
         await _productAdapter.UpdateCountingOfProduct(invoiceItems, ProductCountingState.ReturnState);
         await _marketingAdapter.SendInvoiceToMarketing(order, InvoiceState.Returned);
@@ -43,7 +48,8 @@ internal class ReturningService : IReturningService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    private async Task<List<InvoiceItem>> ChangeStateOfProductItemsToReturned(IEnumerable<int> productIds, long invoiceId)
+    private async Task<List<InvoiceItem>> ChangeStateOfProductItemsToReturned(IEnumerable<int> productIds,
+        long invoiceId)
     {
         var invoiceItems = new List<InvoiceItem>();
 
@@ -62,6 +68,7 @@ internal class ReturningService : IReturningService
 
         return invoiceItems;
     }
+
     public async Task<IEnumerable<OrderItemQueryResponse>> ReturnedInvoiceItems(long invoiceId)
     {
         var returnedOrder = await _invoiceRepository.GetInvoiceById(invoiceId);
@@ -77,14 +84,11 @@ internal class ReturningService : IReturningService
         return invoiceItemResponseDtos;
     }
 
-    public List<OrderQueryResponse> ReturnInvoices(int userId)
+    public async Task<IEnumerable<OrderQueryResponse>> GetReturnedOrders(int userId)
     {
-        var invoices = _invoiceRepository.GetInvoiceByState(userId, InvoiceState.Returned);
-        if (invoices == null)
-        {
-            throw new InvoiceNotFoundException(userId);
-        }
-
-        return OrderMapper.MapInvoicesToOrderDtos(invoices);
+        return await _invoiceService.GetInvoices(userId, InvoiceState.Returned)
+            .AsNoTracking()
+            .ToOrderQueryResponse()
+            .ToListAsync();
     }
 }

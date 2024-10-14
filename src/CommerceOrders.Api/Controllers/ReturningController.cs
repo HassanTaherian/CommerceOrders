@@ -14,15 +14,14 @@ public class ReturningController : Controller
 
     [HttpGet]
     [Route("{userId:int}")]
-    public IActionResult ReturnInvoices([FromRoute] int userId)
+    public async Task<IActionResult> ReturnedOrders([FromRoute] int userId)
     {
-        var invoices = _returningService.ReturnInvoices(userId);
-        return Ok(invoices);
+        return Ok(await _returningService.GetReturnedOrders(userId));
     }
 
     [HttpGet]
     [Route("{invoiceId:long}")]
-    public async Task<IActionResult> ReturnedInvoiceItems([FromRoute] long invoiceId)
+    public async Task<IActionResult> ReturnedOrderItems([FromRoute] long invoiceId)
     {
         var items = await _returningService.ReturnedInvoiceItems(invoiceId);
         return Ok(items);
