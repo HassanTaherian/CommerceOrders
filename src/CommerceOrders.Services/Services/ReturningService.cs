@@ -1,5 +1,6 @@
 ﻿using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Returning;
+using CommerceOrders.Domain.Exceptions.Order;
 using CommerceOrders.Domain.Exceptions.Returning;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,15 +13,17 @@ internal class ReturningService : IReturningService
     private readonly IProductAdapter _productAdapter;
     private readonly IMarketingAdapter _marketingAdapter;
     private readonly InvoiceService _invoiceService;
+    private readonly IApplicationDbContext _dbContext;
 
     public ReturningService(IUnitOfWork unitOfWork, IProductAdapter productAdapter, IMarketingAdapter marketingAdapter,
-        InvoiceService invoiceService)
+        InvoiceService invoiceService, IApplicationDbContext dbContext)
     {
         _unitOfWork = unitOfWork;
         _invoiceRepository = _unitOfWork.InvoiceRepository;
         _productAdapter = productAdapter;
         _marketingAdapter = marketingAdapter;
         _invoiceService = invoiceService;
+        _dbContext = dbContext;
     }
 
     public async Task Return(ReturningRequestDto returningRequestDto)
@@ -69,19 +72,21 @@ internal class ReturningService : IReturningService
         return invoiceItems;
     }
 
-    public async Task<IEnumerable<OrderItemQueryResponse>> ReturnedInvoiceItems(long invoiceId)
+    public async Task<OrderWithItemsQueryResponse> GetReturnedOrderWithItems(long orderId)
     {
-        var returnedOrder = await _invoiceRepository.GetInvoiceById(invoiceId);
+        OrderWithItemsQueryResponse? order = await _dbContext.Set<Invoice>()
+            .AsNoTracking()
+            .Where(o => o.Id == orderId)
+            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsReturned))
+            .ToOrderWithItemsQueryResponse()
+            .FirstOrDefaultAsync();
 
-        if (returnedOrder.InvoiceItems is null)
+        if (order is null)
         {
-            throw new EmptyInvoiceException(invoiceId);
+            throw new OrderNotFoundException(orderId);
         }
 
-        var returnedInvoiceItems = returnedOrder.InvoiceItems.Where(invoiceItem => invoiceItem.IsReturned);
-        var invoiceItemResponseDtos = OrderMapper.MapInvoiceItemsToInvoiceItemResponseDtos(returnedInvoiceItems);
-
-        return invoiceItemResponseDtos;
+        return order;
     }
 
     public async Task<IEnumerable<OrderQueryResponse>> GetReturnedOrders(int userId)

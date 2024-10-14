@@ -1,4 +1,6 @@
-﻿namespace CommerceOrders.Services.Services;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace CommerceOrders.Services.Services;
 
 internal class InvoiceService
 {
@@ -13,5 +15,11 @@ internal class InvoiceService
     {
         return _uow.Set<Invoice>()
             .Where(i => i.UserId == userId && i.State == state);
+    } 
+    
+    public Task<bool> IsInvoiceExist(long invoiceId)
+    {
+        return _uow.Set<Invoice>()
+            .AnyAsync(i => i.Id == invoiceId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using CommerceOrders.Contracts.UI.Order.Returning;
+﻿using CommerceOrders.Contracts.UI.Invoice;
+using CommerceOrders.Contracts.UI.Order.Returning;
 
 namespace CommerceOrders.Api.Controllers;
 
@@ -14,18 +15,13 @@ public class ReturningController : Controller
 
     [HttpGet]
     [Route("{userId:int}")]
-    public async Task<IActionResult> ReturnedOrders([FromRoute] int userId)
-    {
-        return Ok(await _returningService.GetReturnedOrders(userId));
-    }
+    public async Task<IActionResult> GetReturnedOrders([FromRoute] int userId) =>
+        Ok(await _returningService.GetReturnedOrders(userId));
 
     [HttpGet]
     [Route("{invoiceId:long}")]
-    public async Task<IActionResult> ReturnedOrderItems([FromRoute] long invoiceId)
-    {
-        var items = await _returningService.ReturnedInvoiceItems(invoiceId);
-        return Ok(items);
-    }
+    public async Task<IActionResult> GetReturnedOrderWithItems([FromRoute] long invoiceId) =>
+        Ok(await _returningService.GetReturnedOrderWithItems(invoiceId));
 
     [HttpPost]
     public async Task<IActionResult> Return(ReturningRequestDto returningRequestDto)
