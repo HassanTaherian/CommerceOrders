@@ -10,5 +10,7 @@ internal class InvoiceConfig : IEntityTypeConfiguration<Invoice>
             .HasMaxLength(6)
             .IsFixedLength()
             .IsUnicode(false);
+
+        builder.Ignore(invoice => invoice.ReturnedItems);
     }
 }
