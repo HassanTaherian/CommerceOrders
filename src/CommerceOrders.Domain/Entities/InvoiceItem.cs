@@ -1,4 +1,6 @@
-﻿namespace CommerceOrders.Domain.Entities;
+﻿using CommerceOrders.Domain.Exceptions;
+
+namespace CommerceOrders.Domain.Entities;
 
 public class InvoiceItem : BaseEntity
 {
@@ -8,13 +10,39 @@ public class InvoiceItem : BaseEntity
 
     public decimal? FinalPrice { get; set; }
 
-    public int Quantity { get; set; }
+    private int _quantity;
 
-    public bool IsDeleted { get; set; }
+    public int Quantity
+    {
+        get => _quantity;
+        set
+        {
+            if (value <= 0)
+            {
+                throw new CartItemQuantityOutOfRangeInputException();
+            }
+
+            _quantity = value;
+            Restore();
+        }
+    }
+
+
+    public bool IsDeleted { get; private set; }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+    }
+
+    public void Restore()
+    {
+        IsDeleted = false;
+    }
 
     public bool IsReturned { get; set; }
 
     public long InvoiceId { get; set; }
-    
+
     public Invoice Invoice { get; set; }
 }

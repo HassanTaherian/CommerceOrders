@@ -77,7 +77,7 @@ internal sealed class NextCartService : INextCartService
             throw new NextCartItemNotFoundException(dto.UserId, dto.ProductId);
         }
 
-        nextCartItem.IsDeleted = true;
+        nextCartItem.Delete();
 
         await _uow.SaveChangesAsync();
     }

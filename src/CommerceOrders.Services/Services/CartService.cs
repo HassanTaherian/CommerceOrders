@@ -73,7 +73,7 @@ internal class CartService : ICartService
         else
         {
             var item = cart.InvoiceItems.First();
-            item.IsDeleted = false;
+            item.Restore();
             item.Quantity = dto.Quantity;
             item.OriginalPrice = dto.UnitPrice;
         }
@@ -81,15 +81,9 @@ internal class CartService : ICartService
 
     public async Task UpdateCartItemQuantity(UpdateQuantityRequestDto dto)
     {
-        if (dto.Quantity <= 0)
-        {
-            throw new CartItemQuantityOutOfRangeInputException();
-        }
-
         InvoiceItem cartItem = await GetCartItem(dto.UserId, dto.ProductId);
 
         cartItem.Quantity = dto.Quantity;
-        cartItem.IsDeleted = false;
 
         await _uow.SaveChangesAsync();
     }
@@ -98,7 +92,7 @@ internal class CartService : ICartService
     {
         InvoiceItem cartItem = await GetCartItem(dto.UserId, dto.ProductId);
 
-        cartItem.IsDeleted = true;
+        cartItem.Delete();
 
         await _uow.SaveChangesAsync();
     }
