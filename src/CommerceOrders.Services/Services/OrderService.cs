@@ -45,7 +45,6 @@ internal class OrderService : IOrderService
     public async Task<IEnumerable<OrderQueryResponse>> GetOrders(int userId)
     {
         List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
-            .AsNoTracking()
             .ToOrderQueryResponse()
             .ToListAsync();
 
@@ -60,7 +59,6 @@ internal class OrderService : IOrderService
     public async Task<OrderWithItemsQueryResponse> GetOrderWithItems(long orderId)
     {
         OrderWithItemsQueryResponse? order = await _uow.Set<Invoice>()
-            .AsNoTracking()
             .Where(o => o.Id == orderId)
             .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == false))
             .ToOrderWithItemsQueryResponse()

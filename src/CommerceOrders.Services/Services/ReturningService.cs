@@ -57,7 +57,6 @@ internal class ReturningService : IReturningService
     public async Task<OrderWithItemsQueryResponse> GetReturnedOrderWithItems(long orderId)
     {
         OrderWithItemsQueryResponse? order = await _uow.Set<Invoice>()
-            .AsNoTracking()
             .Where(o => o.Id == orderId)
             .Include(invoice => invoice.ReturnedItems)
             .ToOrderWithItemsQueryResponse()
@@ -74,7 +73,6 @@ internal class ReturningService : IReturningService
     public async Task<IEnumerable<OrderQueryResponse>> GetReturnedOrders(int userId)
     {
         return await _invoiceService.GetInvoices(userId, InvoiceState.Returned)
-            .AsNoTracking()
             .ToOrderQueryResponse()
             .ToListAsync();
     }

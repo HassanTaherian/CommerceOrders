@@ -117,7 +117,6 @@ internal class CartService : ICartService
     private async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId, bool isDeleted)
     {
         ICollection<WatchInvoiceItemsResponseDto> cartItems = await QueryCartItems(userId, isDeleted)
-            .AsNoTracking()
             .Select(item => new WatchInvoiceItemsResponseDto
             {
                 ProductId = item.ProductId,

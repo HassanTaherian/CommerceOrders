@@ -19,7 +19,6 @@ internal sealed class NextCartService : INextCartService
     public async Task<NextCartResponseDto> GetNextCart(int userId)
     {
         NextCartResponseDto? nextCart = await FetchNextCart(userId)
-            .AsNoTracking()
             .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted))
             .Select(nc => new NextCartResponseDto
             {
