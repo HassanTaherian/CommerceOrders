@@ -16,4 +16,9 @@ public class InvoiceDbContext : DbContext, IUnitOfWork
 
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<InvoiceItem> InvoiceItems { get; set; }
+
+    public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+    {
+        return base.Set<TEntity>();
+    }
 }
