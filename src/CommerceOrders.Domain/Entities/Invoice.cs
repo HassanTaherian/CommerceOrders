@@ -24,6 +24,26 @@ public class Invoice : BaseEntity
     public decimal TotalOriginalPrice => InvoiceItems.Where(item => item.IsDeleted == false)
         .Sum(item => item.OriginalPrice * item.Quantity);
 
+    public void Checkout()
+    {
+        ValidateCheckout();
+        State = InvoiceState.Order;
+        CreatedAt = DateTime.Now;
+    }
+    
+    private void ValidateCheckout()
+    {
+        if (AddressId is null)
+        {
+            throw new AddressNotSpecifiedException(UserId);
+        }
+
+        if (InvoiceItems.All(item => item.IsDeleted))
+        {
+            throw new EmptyCartException(UserId);
+        }
+    }
+
     public void Return(IEnumerable<int> productIds)
     {
         if (State is not InvoiceState.Order)

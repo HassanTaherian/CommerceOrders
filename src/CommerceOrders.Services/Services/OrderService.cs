@@ -26,36 +26,22 @@ internal class OrderService : IOrderService
     public async Task Checkout(CheckoutCommandRequest request)
     {
         Invoice? cart = await _cartService.GetCartWithItems(request.UserId);
-        
-        ValidateCart(cart, request);
-        
-        await _productAdapter.UpdateCountingOfProduct(cart!.InvoiceItems, ProductCountingState.ShopState);
-        
-        cart.State = InvoiceState.Order;
-        cart.CreatedAt = DateTime.Now;
-        await _uow.SaveChangesAsync();
-        
-        await _marketingAdapter.SendInvoiceToMarketing(cart, InvoiceState.Order);
-    }
 
-    private static void ValidateCart(Invoice? cart, CheckoutCommandRequest request)
-    {
         if (cart is null)
         {
             throw new CartNotFoundException(request.UserId);
         }
-        
-        if (cart.AddressId is null)
-        {
-            throw new AddressNotSpecifiedException(cart.UserId);
-        }
 
-        if (cart.InvoiceItems.Count == 0)
-        {
-            throw new EmptyCartException(cart.UserId);
-        }
+        cart.Checkout();
+
+        await _productAdapter.UpdateCountingOfProduct(cart!.InvoiceItems, ProductCountingState.ShopState);
+
+        await _uow.SaveChangesAsync();
+
+        await _marketingAdapter.SendInvoiceToMarketing(cart, InvoiceState.Order);
     }
-    
+
+
     public async Task<IEnumerable<OrderQueryResponse>> GetOrders(int userId)
     {
         List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
