@@ -46,32 +46,12 @@ internal class ReturningService : IReturningService
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        ReturnOrderItems(dto.ProductIds, order);
-
-        IEnumerable<InvoiceItem> returnedItems = order.InvoiceItems.Where(item => item.IsReturned);
-        await _productAdapter.UpdateCountingOfProduct(returnedItems, ProductCountingState.ReturnState);
-
-        order.ReturnedAt = DateTime.Now;
-        order.State = InvoiceState.Returned;
-
+        
+        order.Return(dto.ProductIds);
+        await _productAdapter.UpdateCountingOfProduct(order.ReturnedItems, ProductCountingState.ReturnState);
+        
         await _uow.SaveChangesAsync();
         await _marketingAdapter.SendInvoiceToMarketing(order, InvoiceState.Returned);
-    }
-
-    private void ReturnOrderItems(IEnumerable<int> productIds, Invoice order)
-    {
-        Dictionary<int, InvoiceItem> itemsById = order.InvoiceItems.ToDictionary(item => item.ProductId);
-
-        foreach (int productId in productIds)
-        {
-            if (itemsById.TryGetValue(productId, out InvoiceItem? invoiceItem))
-            {
-                throw new OrderItemNotFoundException(order.Id, productId);
-            }
-
-            invoiceItem!.IsReturned = true;
-        }
     }
 
     public async Task<OrderWithItemsQueryResponse> GetReturnedOrderWithItems(long orderId)
@@ -79,7 +59,7 @@ internal class ReturningService : IReturningService
         OrderWithItemsQueryResponse? order = await _uow.Set<Invoice>()
             .AsNoTracking()
             .Where(o => o.Id == orderId)
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsReturned))
+            .Include(invoice => invoice.ReturnedItems)
             .ToOrderWithItemsQueryResponse()
             .FirstOrDefaultAsync();
 
