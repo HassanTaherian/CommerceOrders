@@ -60,7 +60,7 @@ internal class OrderService : IOrderService
     {
         OrderWithItemsQueryResponse? order = await _uow.Set<Invoice>()
             .Where(o => o.Id == orderId)
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.IsDeleted == false))
+            .Include(invoice => invoice.InvoiceItems)
             .ToOrderWithItemsQueryResponse()
             .FirstOrDefaultAsync();
 

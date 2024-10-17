@@ -100,7 +100,7 @@ internal class CartService : ICartService
     private Task<Invoice?> GetCartWithSingleItem(int userId, int productId)
     {
         return QueryCart(userId)
-            .Include(invoice => invoice.InvoiceItems.Where(item => item.ProductId == productId && !item.IsDeleted))
+            .Include(invoice => invoice.InvoiceItems.Where(item => item.ProductId == productId))
             .FirstOrDefaultAsync();
     }
 
@@ -116,13 +116,21 @@ internal class CartService : ICartService
 
     private async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId, bool isDeleted)
     {
-        ICollection<WatchInvoiceItemsResponseDto> cartItems = await QueryCartItems(userId, isDeleted)
-            .Select(item => new WatchInvoiceItemsResponseDto
-            {
-                ProductId = item.ProductId,
-                Quantity = item.Quantity,
-                UnitPrice = item.OriginalPrice
-            })
+        IQueryable<InvoiceItem> query = QueryCartItems(userId);
+
+        if (isDeleted)
+        {
+            query = query.IgnoreQueryFilters()
+                .Where(item => item.IsDeleted);
+        }
+
+        ICollection<WatchInvoiceItemsResponseDto> cartItems = await query.Select(item =>
+                new WatchInvoiceItemsResponseDto
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.OriginalPrice
+                })
             .ToListAsync();
 
         if (cartItems is null)
@@ -141,7 +149,7 @@ internal class CartService : ICartService
     public Task<Invoice?> GetCartWithItems(int userId)
     {
         return QueryCart(userId)
-            .Include(invoice => invoice.InvoiceItems.Where(item => !item.IsDeleted))
+            .Include(invoice => invoice.InvoiceItems)
             .FirstOrDefaultAsync();
     }
 
@@ -161,7 +169,7 @@ internal class CartService : ICartService
 
     public async Task<InvoiceItem> GetCartItem(int userId, int productId)
     {
-        InvoiceItem? cartItem = await QueryCartItems(userId, false)
+        InvoiceItem? cartItem = await QueryCartItems(userId)
             .Where(item => item.ProductId == productId)
             .FirstOrDefaultAsync();
 
@@ -173,13 +181,18 @@ internal class CartService : ICartService
         return cartItem;
     }
 
-    private IQueryable<InvoiceItem> QueryCartItems(int userId, bool isDeleted)
+    private IQueryable<InvoiceItem> QueryCartItems(int userId)
     {
         IQueryable<long> invoiceIds = QueryCart(userId)
             .Select(i => i.Id);
 
         return _uow.Set<InvoiceItem>()
-            .Where(item => invoiceIds.Contains(item.InvoiceId) && item.IsDeleted == isDeleted);
+            .Where(item => invoiceIds.Contains(item.InvoiceId));
+    }
+
+    private IQueryable<InvoiceItem> QueryDeletedCartItems(int userId)
+    {
+        return QueryCartItems(userId).IgnoreQueryFilters();
     }
 
     public async Task<long> GetCartId(int userId)

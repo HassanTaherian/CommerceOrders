@@ -25,7 +25,7 @@ internal class ReturningService : IReturningService
     public async Task Return(ReturningRequestDto dto)
     {
         Invoice? order = await _uow.Set<Invoice>()
-            .Include(i => i.InvoiceItems.Where(item => !item.IsDeleted))
+            .Include(i => i.InvoiceItems)
             .Where(i => i.Id == dto.OrderId)
             .FirstOrDefaultAsync();
 

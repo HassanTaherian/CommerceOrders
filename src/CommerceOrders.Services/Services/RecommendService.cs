@@ -32,6 +32,7 @@ internal class RecommendService : IRecommendService
     private Task<List<int>> GetDeletedProductsInInvoiceItems(int userId, int productId)
     {
         return _uow.Set<InvoiceItem>()
+            .IgnoreQueryFilters()
             .Where(item => item.Invoice.UserId == userId)
             .Where(item => item.IsDeleted && item.ProductId != productId)
             .Select(item => item.ProductId)
@@ -43,7 +44,7 @@ internal class RecommendService : IRecommendService
         return
         (
             from item in _uow.Set<InvoiceItem>()
-            where !item.IsDeleted && !item.IsReturned
+            where !item.IsReturned
             group item by item.ProductId
             into productGroup
             orderby productGroup.Count() descending
