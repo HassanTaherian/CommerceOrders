@@ -1,4 +1,5 @@
-﻿using CommerceOrders.Contracts.UI.Invoice;
+﻿using CommerceOrders.Contracts.UI;
+using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Checkout;
 using CommerceOrders.Domain.Exceptions.Order;
 using Microsoft.EntityFrameworkCore;
@@ -42,18 +43,33 @@ internal class OrderService : IOrderService
     }
 
 
-    public async Task<IEnumerable<OrderQueryResponse>> GetOrders(int userId)
+    public async Task<PaginationResultQueryResponse<OrderQueryResponse>> GetOrders(int userId, int page)
     {
-        List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
-            .ToOrderQueryResponse()
-            .ToListAsync();
+        page = page == default ? 1 : page;
 
-        if (orders.Count == 0)
+        if (page < 1)
         {
-            return Enumerable.Empty<OrderQueryResponse>();
+            throw new ArgumentException("Page value should be non-negative value");
         }
 
-        return orders;
+        List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
+            .OrderByDescending(order => order.CreatedAt)
+            .ToOrderQueryResponse()
+            .Skip((page - 1) * AppSettings.ResponsePageLimit)
+            .Take(AppSettings.ResponsePageLimit)
+            .ToListAsync();
+
+        int totalOrders = await _invoiceService.GetInvoices(userId, InvoiceState.Order).CountAsync();
+
+        return new PaginationResultQueryResponse<OrderQueryResponse>
+        {
+            Items = orders.Count == 0 ? Enumerable.Empty<OrderQueryResponse>() : orders,
+            Page = page,
+            TotalItems = totalOrders,
+            TotalPages = totalOrders % AppSettings.ResponsePageLimit == 0
+                ? totalOrders / AppSettings.ResponsePageLimit
+                : totalOrders / AppSettings.ResponsePageLimit + 1
+        };
     }
 
     public async Task<OrderWithItemsQueryResponse> GetOrderWithItems(long orderId)
