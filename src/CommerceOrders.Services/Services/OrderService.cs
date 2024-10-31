@@ -54,6 +54,7 @@ internal class OrderService : IOrderService
 
         List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
             .OrderByDescending(order => order.CreatedAt)
+            .ThenBy(order => order.Id)
             .ToOrderQueryResponse()
             .Skip((page - 1) * AppSettings.ResponsePageLimit)
             .Take(AppSettings.ResponsePageLimit)
