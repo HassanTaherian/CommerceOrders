@@ -7,6 +7,6 @@ public interface IMarketingAdapter
 {
     Task SendInvoiceToMarketing(Invoice invoice, InvoiceState state);
 
-    Task<DiscountResponseDto?> SendDiscountCode(Invoice cart, DiscountCodeRequestDto dto);
+    Task<DiscountResponseDto?> SendDiscountCode(Invoice cart, ApplyCartDiscountCommandRequest dto);
 
 }

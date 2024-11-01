@@ -34,7 +34,7 @@ internal class MarketingAdapter : IMarketingAdapter
         return marketingInvoiceRequest;
     }
     
-    public async Task<DiscountResponseDto?> SendDiscountCode(Invoice cart, DiscountCodeRequestDto dto)
+    public async Task<DiscountResponseDto?> SendDiscountCode(Invoice cart, ApplyCartDiscountCommandRequest dto)
     {
         var discountRequestDto = CreateDiscountRequestDto(cart, dto);
         var jsonBridge = new JsonBridge<DiscountRequestDto, DiscountResponseDto>();
@@ -43,7 +43,7 @@ internal class MarketingAdapter : IMarketingAdapter
         return jsonBridge.Deserialize(response);
     }
     
-    private DiscountRequestDto CreateDiscountRequestDto(Invoice cart, DiscountCodeRequestDto dto)
+    private DiscountRequestDto CreateDiscountRequestDto(Invoice cart, ApplyCartDiscountCommandRequest dto)
     {
         return new DiscountRequestDto
         {

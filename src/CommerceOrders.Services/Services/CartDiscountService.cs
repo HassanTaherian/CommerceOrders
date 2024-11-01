@@ -16,7 +16,7 @@ internal sealed class CartDiscountService : ICartDiscountService
         _cartService = cartService;
     }
 
-    public async Task Apply(DiscountCodeRequestDto dto)
+    public async Task Apply(ApplyCartDiscountCommandRequest dto)
     {
         Invoice? cart = await _cartService.GetCartWithItems(dto.UserId);
 
@@ -37,7 +37,7 @@ internal sealed class CartDiscountService : ICartDiscountService
 
         await _uow.SaveChangesAsync();
     }
-    
+
     private static void ApplyOnCartItemsPrice(IEnumerable<InvoiceItem> cartItems, DiscountResponseDto dto)
     {
         Dictionary<int, InvoiceItem> items = cartItems.ToDictionary(item => item.ProductId);
@@ -51,5 +51,23 @@ internal sealed class CartDiscountService : ICartDiscountService
 
             item.FinalPrice = discountItem.UnitPrice;
         }
+    }
+
+    public async Task Clear(int userId)
+    {
+        Invoice? cart = await _cartService.GetCartWithItems(userId);
+
+        if (cart is null)
+        {
+            throw new CartNotFoundException(userId);
+        }
+
+        foreach (InvoiceItem item in cart.InvoiceItems)
+        {
+            item.FinalPrice = null;
+        }
+
+        cart.DiscountCode = null;
+        await _uow.SaveChangesAsync();
     }
 }

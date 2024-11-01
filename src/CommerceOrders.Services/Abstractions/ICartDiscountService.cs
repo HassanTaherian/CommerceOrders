@@ -4,5 +4,7 @@ namespace CommerceOrders.Services.Abstractions;
 
 public interface ICartDiscountService
 {
-    Task Apply(DiscountCodeRequestDto dto);
+    Task Apply(ApplyCartDiscountCommandRequest request);
+
+    Task Clear(int userId);
 }

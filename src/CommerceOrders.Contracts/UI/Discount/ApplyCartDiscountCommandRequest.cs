@@ -1,6 +1,6 @@
 ﻿namespace CommerceOrders.Contracts.UI.Discount;
 
-public class DiscountCodeRequestDto
+public class ApplyCartDiscountCommandRequest
 {
     public int UserId { get; set; }
 
