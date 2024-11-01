@@ -23,7 +23,7 @@ internal class ProductAdapter : IProductAdapter
     private ICollection<ProductUpdateCountingItemRequestDto> MapInvoiceConfig(IEnumerable<InvoiceItem> invoiceItems,
         ProductCountingState state)
     {
-        var countingDtos = new List<ProductUpdateCountingItemRequestDto>();
+        List<ProductUpdateCountingItemRequestDto> countingDtos = [];
 
         foreach (var invoiceItem in invoiceItems)
         {

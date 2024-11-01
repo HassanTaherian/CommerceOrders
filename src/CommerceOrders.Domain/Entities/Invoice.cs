@@ -17,7 +17,7 @@ public class Invoice : BaseEntity
 
     public DateTime? ReturnedAt { get; private set; }
 
-    public ICollection<InvoiceItem> InvoiceItems { get; init; } = new List<InvoiceItem>();
+    public ICollection<InvoiceItem> InvoiceItems { get; init; } = [];
 
     public IEnumerable<InvoiceItem> ReturnedItems => InvoiceItems.Where(item => item.IsReturned);
 

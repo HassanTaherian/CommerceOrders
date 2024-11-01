@@ -86,7 +86,7 @@ internal sealed class NextCartService : INextCartService
         var nextCart = new Invoice
         {
             UserId = userId,
-            InvoiceItems = new List<InvoiceItem>(),
+            InvoiceItems = [],
             State = InvoiceState.NextCart
         };
         _uow.Set<Invoice>()

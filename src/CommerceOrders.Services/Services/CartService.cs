@@ -1,7 +1,6 @@
 ﻿using CommerceOrders.Contracts.UI;
 using CommerceOrders.Contracts.UI.Address;
 using CommerceOrders.Contracts.UI.Cart;
-using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Domain.Exceptions.Carts;
 using CommerceOrders.Services.Common;
 using Microsoft.EntityFrameworkCore;
@@ -46,15 +45,15 @@ internal class CartService : ICartService
         {
             UserId = userId,
             State = InvoiceState.Cart,
-            InvoiceItems = new List<InvoiceItem>
-            {
-                new()
+            InvoiceItems =
+            [
+                new InvoiceItem
                 {
                     ProductId = dto.ProductId,
                     OriginalPrice = dto.UnitPrice,
                     Quantity = dto.Quantity
                 }
-            }
+            ]
         };
 
         _uow.Set<Invoice>().Add(cart);
