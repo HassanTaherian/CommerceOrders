@@ -15,7 +15,7 @@ public class CartController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCarts([FromQuery] int page)
+    public async Task<IActionResult> GetCarts([FromQuery] int? page)
     {
         return Ok(await _cartService.GetCarts(page));
     }

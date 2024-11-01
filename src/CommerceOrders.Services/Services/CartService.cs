@@ -156,9 +156,9 @@ internal class CartService : ICartService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<PaginationResultQueryResponse<CartQueryResponse>> GetCarts(int page)
+    public async Task<PaginationResultQueryResponse<CartQueryResponse>> GetCarts(int? page)
     {
-        page = page == default ? 1 : page;
+        page ??= 1;
 
         if (page < 1)
         {
@@ -168,7 +168,7 @@ internal class CartService : ICartService
         List<CartQueryResponse> cartQueryResponses = await _uow.Set<Invoice>()
             .Where(i => i.State == InvoiceState.Cart)
             .OrderBy(c => c.Id)
-            .Paginate(page)
+            .Paginate(page.Value)
             .Select(c => new CartQueryResponse
             {
                 UserId = c.UserId,
@@ -181,7 +181,7 @@ internal class CartService : ICartService
             .Where(c => c.State == InvoiceState.Cart)
             .CountAsync();
 
-        return cartQueryResponses.ToPaginationResult(totalCarts, page);
+        return cartQueryResponses.ToPaginationResult(totalCarts, page.Value);
     }
 
     public async Task SetAddress(AddressInvoiceDataDto dto)

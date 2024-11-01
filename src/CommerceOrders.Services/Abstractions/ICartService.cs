@@ -24,5 +24,5 @@ public interface ICartService
 
     Task<Invoice?> GetCartWithItems(int userId);
 
-    Task<PaginationResultQueryResponse<CartQueryResponse>> GetCarts(int page);
+    Task<PaginationResultQueryResponse<CartQueryResponse>> GetCarts(int? page);
 }

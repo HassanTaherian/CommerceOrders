@@ -44,9 +44,9 @@ internal class OrderService : IOrderService
     }
 
 
-    public async Task<PaginationResultQueryResponse<OrderQueryResponse>> GetOrders(int userId, int page)
+    public async Task<PaginationResultQueryResponse<OrderQueryResponse>> GetOrders(int userId, int? page)
     {
-        page = page == default ? 1 : page;
+        page ??= 1;
 
         if (page < 1)
         {
@@ -56,13 +56,13 @@ internal class OrderService : IOrderService
         List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
             .OrderByDescending(order => order.CreatedAt)
             .ThenBy(order => order.Id)
-            .Paginate(page)
+            .Paginate(page.Value)
             .ToOrderQueryResponse()
             .ToListAsync();
 
         int totalOrders = await _invoiceService.GetInvoices(userId, InvoiceState.Order).CountAsync();
 
-        return orders.ToPaginationResult(totalOrders, page);
+        return orders.ToPaginationResult(totalOrders, page.Value);
     }
 
     public async Task<OrderWithItemsQueryResponse> GetOrderWithItems(long orderId)

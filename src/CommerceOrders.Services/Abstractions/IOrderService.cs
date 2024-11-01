@@ -8,7 +8,7 @@ public interface IOrderService
 {
     Task Checkout(CheckoutCommandRequest request);
 
-    Task<PaginationResultQueryResponse<OrderQueryResponse>> GetOrders(int userId, int page);
+    Task<PaginationResultQueryResponse<OrderQueryResponse>> GetOrders(int userId, int? page);
 
     Task<OrderWithItemsQueryResponse> GetOrderWithItems(long invoiceId);
 }

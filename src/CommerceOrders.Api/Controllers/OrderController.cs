@@ -15,7 +15,7 @@ public class OrderController : Controller
     }
 
     [HttpGet("{userId:int}")]
-    public async Task<IActionResult> GetOrders(int userId, [FromQuery] int page)
+    public async Task<IActionResult> GetOrders(int userId, [FromQuery] int? page)
     {
         PaginationResultQueryResponse<OrderQueryResponse> orders = await _orderService.GetOrders(userId, page);
         return Ok(orders);
