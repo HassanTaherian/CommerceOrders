@@ -14,6 +14,12 @@ public class CartController : Controller
         _cartService = productService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetCarts([FromQuery] int page)
+    {
+        return Ok(await _cartService.GetCarts(page));
+    }
+
     [HttpGet("{userId:int}")]
     public async Task<IActionResult> GetCartItems(int userId)
     {
@@ -25,7 +31,7 @@ public class CartController : Controller
     {
         return Ok(await _cartService.GetDeletedCartItems(userId));
     }
-    
+
     [HttpPost]
     public Task AddCartItem(AddProductRequestDto addProductRequestDto)
     {
@@ -43,7 +49,7 @@ public class CartController : Controller
     {
         return _cartService.DeleteCartItem(deleteProductRequestDto);
     }
-    
+
     [HttpPatch]
     public async Task<IActionResult> AddAddress(
         [FromBody] AddressInvoiceDataDto addressInvoiceDataDto)

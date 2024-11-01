@@ -1,5 +1,7 @@
-﻿using CommerceOrders.Contracts.UI.Address;
+﻿using CommerceOrders.Contracts.UI;
+using CommerceOrders.Contracts.UI.Address;
 using CommerceOrders.Contracts.UI.Cart;
+using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Domain.Exceptions.Carts;
 using Microsoft.EntityFrameworkCore;
 
@@ -104,17 +106,17 @@ internal class CartService : ICartService
             .FirstOrDefaultAsync();
     }
 
-    public Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId)
+    public Task<IEnumerable<CartItemQueryResponse>> GetCartItems(int userId)
     {
         return GetCartItems(userId, false);
     }
 
-    public Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetDeletedCartItems(int userId)
+    public Task<IEnumerable<CartItemQueryResponse>> GetDeletedCartItems(int userId)
     {
         return GetCartItems(userId, true);
     }
 
-    private async Task<IEnumerable<WatchInvoiceItemsResponseDto>> GetCartItems(int userId, bool isDeleted)
+    private async Task<IEnumerable<CartItemQueryResponse>> GetCartItems(int userId, bool isDeleted)
     {
         IQueryable<InvoiceItem> query = QueryCartItems(userId);
 
@@ -124,8 +126,8 @@ internal class CartService : ICartService
                 .Where(item => item.IsDeleted);
         }
 
-        ICollection<WatchInvoiceItemsResponseDto> cartItems = await query.Select(item =>
-                new WatchInvoiceItemsResponseDto
+        ICollection<CartItemQueryResponse> cartItems = await query.Select(item =>
+                new CartItemQueryResponse
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
@@ -151,6 +153,43 @@ internal class CartService : ICartService
         return QueryCart(userId)
             .Include(invoice => invoice.InvoiceItems)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<PaginationResultQueryResponse<CartQueryResponse>> GetCarts(int page)
+    {
+        page = page == default ? 1 : page;
+
+        if (page < 1)
+        {
+            throw new ArgumentException("Page value should be non-negative value");
+        }
+
+        List<CartQueryResponse> cartQueryResponses = await _uow.Set<Invoice>()
+            .Where(c => c.State == InvoiceState.Cart)
+            .OrderBy(c => c.Id)
+            .Skip((page - 1) * AppSettings.ResponsePageLimit)
+            .Take(AppSettings.ResponsePageLimit)
+            .Select(c => new CartQueryResponse
+            {
+                UserId = c.UserId,
+                AddressId = c.AddressId,
+                DiscountCode = c.DiscountCode
+            })
+            .ToListAsync();
+
+        int totalCarts = await _uow.Set<Invoice>()
+            .Where(c => c.State == InvoiceState.Cart)
+            .CountAsync();
+
+        return new PaginationResultQueryResponse<CartQueryResponse>()
+        {
+            Items = cartQueryResponses,
+            TotalItems = totalCarts,
+            Page = page,
+            TotalPages = totalCarts % AppSettings.ResponsePageLimit == 0
+                ? totalCarts / AppSettings.ResponsePageLimit
+                : totalCarts / AppSettings.ResponsePageLimit + 1
+        };
     }
 
     public async Task SetAddress(AddressInvoiceDataDto dto)
