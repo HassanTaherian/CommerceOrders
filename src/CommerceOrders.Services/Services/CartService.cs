@@ -3,6 +3,7 @@ using CommerceOrders.Contracts.UI.Address;
 using CommerceOrders.Contracts.UI.Cart;
 using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Domain.Exceptions.Carts;
+using CommerceOrders.Services.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommerceOrders.Services.Services;
@@ -165,10 +166,9 @@ internal class CartService : ICartService
         }
 
         List<CartQueryResponse> cartQueryResponses = await _uow.Set<Invoice>()
-            .Where(c => c.State == InvoiceState.Cart)
+            .Where(i => i.State == InvoiceState.Cart)
             .OrderBy(c => c.Id)
-            .Skip((page - 1) * AppSettings.ResponsePageLimit)
-            .Take(AppSettings.ResponsePageLimit)
+            .Paginate(page)
             .Select(c => new CartQueryResponse
             {
                 UserId = c.UserId,
@@ -181,15 +181,7 @@ internal class CartService : ICartService
             .Where(c => c.State == InvoiceState.Cart)
             .CountAsync();
 
-        return new PaginationResultQueryResponse<CartQueryResponse>()
-        {
-            Items = cartQueryResponses,
-            TotalItems = totalCarts,
-            Page = page,
-            TotalPages = totalCarts % AppSettings.ResponsePageLimit == 0
-                ? totalCarts / AppSettings.ResponsePageLimit
-                : totalCarts / AppSettings.ResponsePageLimit + 1
-        };
+        return cartQueryResponses.ToPaginationResult(totalCarts, page);
     }
 
     public async Task SetAddress(AddressInvoiceDataDto dto)

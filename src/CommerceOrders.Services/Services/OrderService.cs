@@ -2,6 +2,7 @@
 using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order.Checkout;
 using CommerceOrders.Domain.Exceptions.Order;
+using CommerceOrders.Services.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommerceOrders.Services.Services;
@@ -55,22 +56,13 @@ internal class OrderService : IOrderService
         List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
             .OrderByDescending(order => order.CreatedAt)
             .ThenBy(order => order.Id)
+            .Paginate(page)
             .ToOrderQueryResponse()
-            .Skip((page - 1) * AppSettings.ResponsePageLimit)
-            .Take(AppSettings.ResponsePageLimit)
             .ToListAsync();
 
         int totalOrders = await _invoiceService.GetInvoices(userId, InvoiceState.Order).CountAsync();
 
-        return new PaginationResultQueryResponse<OrderQueryResponse>
-        {
-            Items = orders.Count == 0 ? Enumerable.Empty<OrderQueryResponse>() : orders,
-            Page = page,
-            TotalItems = totalOrders,
-            TotalPages = totalOrders % AppSettings.ResponsePageLimit == 0
-                ? totalOrders / AppSettings.ResponsePageLimit
-                : totalOrders / AppSettings.ResponsePageLimit + 1
-        };
+        return orders.ToPaginationResult(totalOrders, page);
     }
 
     public async Task<OrderWithItemsQueryResponse> GetOrderWithItems(long orderId)
