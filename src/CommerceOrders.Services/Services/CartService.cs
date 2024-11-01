@@ -132,7 +132,8 @@ internal class CartService : ICartService
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
-                    UnitPrice = item.OriginalPrice
+                    OriginalPrice = item.OriginalPrice,
+                    FinalPrice = item.FinalPrice
                 })
             .ToListAsync();
 
