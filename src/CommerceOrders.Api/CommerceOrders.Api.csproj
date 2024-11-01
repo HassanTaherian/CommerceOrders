@@ -1,32 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>CommerceOrders.Api</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Middleware\**" />
     <Content Remove="Middleware\**" />
     <EmbeddedResource Remove="Middleware\**" />
     <None Remove="Middleware\**" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\CommerceOrders.Contracts\CommerceOrders.Contracts.csproj" />
     <ProjectReference Include="..\CommerceOrders.Persistence\CommerceOrders.Persistence.csproj" />
     <ProjectReference Include="..\CommerceOrders.Services\CommerceOrders.Services.csproj" />
   </ItemGroup>
-
 </Project>
