@@ -13,13 +13,11 @@ public class ReturningController : Controller
         _returningService = returningService;
     }
 
-    [HttpGet]
-    [Route("{userId:int}")]
+    [HttpGet("{userId:int}")]
     public async Task<IActionResult> GetReturnedOrders([FromRoute] int userId) =>
         Ok(await _returningService.GetReturnedOrders(userId));
 
-    [HttpGet]
-    [Route("{invoiceId:long}")]
+    [HttpGet("{invoiceId:long}")]
     public async Task<IActionResult> GetReturnedOrderWithItems([FromRoute] long invoiceId) =>
         Ok(await _returningService.GetReturnedOrderWithItems(invoiceId));
 

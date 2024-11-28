@@ -20,14 +20,14 @@ public class CartController : Controller
         return Ok(await _cartService.GetCarts(page));
     }
 
-    [HttpGet("{userId:int}")]
-    public async Task<IActionResult> GetCartItems(int userId)
+    [HttpGet("/{userId:int}")]
+    public async Task<IActionResult> GetCartItems([FromRoute]int userId)
     {
         return Ok(await _cartService.GetCartItems(userId));
     }
 
     [HttpGet("{userId:int}")]
-    public async Task<IActionResult> GetDeletedCartItems(int userId)
+    public async Task<IActionResult> GetDeletedCartItems([FromRoute] int userId)
     {
         return Ok(await _cartService.GetDeletedCartItems(userId));
     }
