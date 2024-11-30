@@ -3,6 +3,8 @@ using CommerceOrders.Contracts.UI.Invoice;
 using CommerceOrders.Contracts.UI.Order;
 using CommerceOrders.Contracts.UI.Order.Checkout;
 using CommerceOrders.Domain.Exceptions.Order;
+using CommerceOrders.Domain.Specifications;
+using CommerceOrders.Domain.Specifications.Common;
 using CommerceOrders.Services.Common;
 using CommerceOrders.Services.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -58,36 +60,19 @@ internal class OrderService : IOrderService
 
         ValidateGetOrdersQueryRequest(request);
 
-        IQueryable<Invoice> ordersQuery = _invoiceService.GetInvoices(userId, InvoiceState.Order);
+        ISpecification<Invoice> specification = new TrueSpecification<Invoice>()
+            .AndIf(new OrderCreatedOnOrAfterDateSpecification(DateOnly.Parse(request.StartDate!)),
+                !string.IsNullOrEmpty(request.StartDate))
+            .AndIf(new OrderCreatedOnOrBeforeDateSpecification(DateOnly.Parse(request.EndDate!)),
+                !string.IsNullOrEmpty(request.EndDate))
+            .AndIf(new AddressInclusionSpecification(request.Addresses!),
+                request.Addresses is not null && request.Addresses.Count > 0)
+            .AndIf(new PriceGreaterThanOrEqualSpecification(request.StartPrice!.Value), request.StartPrice.HasValue)
+            .AndIf(new PriceLessThanOrEqualSpecification(request.EndPrice!.Value), request.EndPrice.HasValue);
 
-        if (request.StartDate is not null)
-        {
-            DateOnly startDate = DateOnly.Parse(request.StartDate);
-            ordersQuery = ordersQuery.Where(o => DateOnly.FromDateTime(o.CreatedAt!.Value) >= startDate);
-        }
-
-        if (request.EndDate is not null)
-        {
-            DateOnly endDate = DateOnly.Parse(request.EndDate);
-            ordersQuery = ordersQuery.Where(o => DateOnly.FromDateTime(o.CreatedAt!.Value) <= endDate);
-        }
-
-        if (request.Addresses is not null)
-        {
-            ordersQuery = ordersQuery.Where(o => request.Addresses.Contains(o.AddressId!.Value));
-        }
-
-        if (request.StartPrice.HasValue)
-        {
-            ordersQuery = ordersQuery.Where(o => o.TotalFinalPrice >= request.StartPrice);
-        }
-
-        if (request.EndPrice.HasValue)
-        {
-            ordersQuery = ordersQuery.Where(o => o.TotalOriginalPrice <= request.EndPrice);
-        }
-
-        List<OrderQueryResponse> orders = await ordersQuery.OrderByDescending(order => order.CreatedAt)
+        List<OrderQueryResponse> orders = await _invoiceService.GetInvoices(userId, InvoiceState.Order)
+            .ApplySpecification(specification)
+            .OrderByDescending(order => order.CreatedAt)
             .ThenBy(order => order.Id)
             .Paginate(page.Value)
             .ToOrderQueryResponse()
@@ -100,8 +85,8 @@ internal class OrderService : IOrderService
 
     private static void ValidateGetOrdersQueryRequest(GetOrdersQueryRequest request)
     {
-        if (request.StartDate is not null && !DateOnly.TryParse(request.StartDate, out _) ||
-            request.EndDate is not null && !DateOnly.TryParse(request.EndDate, out _))
+        if (!string.IsNullOrEmpty(request.StartDate) && !DateOnly.TryParse(request.StartDate, out _) ||
+            !string.IsNullOrEmpty(request.EndDate) && !DateOnly.TryParse(request.EndDate, out _))
         {
             throw new InvalidOrderDateException();
         }
