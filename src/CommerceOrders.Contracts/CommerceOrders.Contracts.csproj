@@ -7,7 +7,4 @@
   <ItemGroup>
     <ProjectReference Include="..\CommerceOrders.Domain\CommerceOrders.Domain.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\Order" />
-  </ItemGroup>
 </Project>

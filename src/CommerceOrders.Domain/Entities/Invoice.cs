@@ -21,8 +21,9 @@ public class Invoice : BaseEntity
 
     public IEnumerable<InvoiceItem> ReturnedItems => InvoiceItems.Where(item => item.IsReturned);
 
-    public decimal TotalOriginalPrice => InvoiceItems.Where(item => item.IsDeleted == false)
-        .Sum(item => item.OriginalPrice * item.Quantity);
+    public decimal TotalOriginalPrice => InvoiceItems.Sum(item => item.OriginalPrice * item.Quantity);
+    
+    public decimal TotalFinalPrice => InvoiceItems.Sum(item => item.FinalPrice!.Value * item.Quantity);
 
     public void Checkout()
     {
@@ -30,7 +31,7 @@ public class Invoice : BaseEntity
         State = InvoiceState.Order;
         CreatedAt = DateTime.Now;
     }
-    
+
     private void ValidateCheckout()
     {
         if (AddressId is null)

@@ -1,5 +1,6 @@
 ﻿using CommerceOrders.Contracts.UI;
 using CommerceOrders.Contracts.UI.Invoice;
+using CommerceOrders.Contracts.UI.Order;
 using CommerceOrders.Contracts.UI.Order.Checkout;
 
 namespace CommerceOrders.Api.Controllers;
@@ -15,9 +16,10 @@ public class OrderController : Controller
     }
 
     [HttpGet("{userId:int}")]
-    public async Task<IActionResult> GetOrders([FromRoute] int userId, [FromQuery] int? page)
+    public async Task<IActionResult> GetOrders([FromRoute] int userId, [FromQuery] int? page,
+        [FromQuery] GetOrdersQueryRequest request)
     {
-        PaginationResultQueryResponse<OrderQueryResponse> orders = await _orderService.GetOrders(userId, page);
+        PaginationResultQueryResponse<OrderQueryResponse> orders = await _orderService.GetOrders(userId, page, request);
         return Ok(orders);
     }
 
