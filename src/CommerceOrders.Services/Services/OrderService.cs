@@ -100,7 +100,7 @@ internal class OrderService : IOrderService
 
     private static void ValidateGetOrdersQueryRequest(GetOrdersQueryRequest request)
     {
-        if (request.StartDate is not null && !DateOnly.TryParse(request.StartDate, out _) ||
+        if (!string.IsNullOrEmpty(request.StartDate) && !DateOnly.TryParse(request.StartDate, out _) ||
             request.EndDate is not null && !DateOnly.TryParse(request.EndDate, out _))
         {
             throw new InvalidOrderDateException();
