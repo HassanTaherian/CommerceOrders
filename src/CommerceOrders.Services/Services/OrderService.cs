@@ -58,42 +58,42 @@ internal class OrderService : IOrderService
 
         ValidateGetOrdersQueryRequest(request);
 
-        IQueryable<Invoice> ordersQuery = _invoiceService.GetInvoices(userId, InvoiceState.Order);
+        IQueryable<Invoice> filteredOrdersQuery = _invoiceService.GetInvoices(userId, InvoiceState.Order);
 
         if (request.StartDate is not null)
         {
             DateOnly startDate = DateOnly.Parse(request.StartDate);
-            ordersQuery = ordersQuery.Where(o => DateOnly.FromDateTime(o.CreatedAt!.Value) >= startDate);
+            filteredOrdersQuery = filteredOrdersQuery.Where(o => DateOnly.FromDateTime(o.CreatedAt!.Value) >= startDate);
         }
 
         if (request.EndDate is not null)
         {
             DateOnly endDate = DateOnly.Parse(request.EndDate);
-            ordersQuery = ordersQuery.Where(o => DateOnly.FromDateTime(o.CreatedAt!.Value) <= endDate);
+            filteredOrdersQuery = filteredOrdersQuery.Where(o => DateOnly.FromDateTime(o.CreatedAt!.Value) <= endDate);
         }
 
         if (request.Addresses is not null)
         {
-            ordersQuery = ordersQuery.Where(o => request.Addresses.Contains(o.AddressId!.Value));
+            filteredOrdersQuery = filteredOrdersQuery.Where(o => request.Addresses.Contains(o.AddressId!.Value));
         }
 
         if (request.StartPrice.HasValue)
         {
-            ordersQuery = ordersQuery.Where(o => o.TotalFinalPrice >= request.StartPrice);
+            filteredOrdersQuery = filteredOrdersQuery.Where(o => o.TotalFinalPrice >= request.StartPrice);
         }
 
         if (request.EndPrice.HasValue)
         {
-            ordersQuery = ordersQuery.Where(o => o.TotalOriginalPrice <= request.EndPrice);
+            filteredOrdersQuery = filteredOrdersQuery.Where(o => o.TotalFinalPrice <= request.EndPrice);
         }
 
-        List<OrderQueryResponse> orders = await ordersQuery.OrderByDescending(order => order.CreatedAt)
+        List<OrderQueryResponse> orders = await filteredOrdersQuery.OrderByDescending(order => order.CreatedAt)
             .ThenBy(order => order.Id)
             .Paginate(page.Value)
             .ToOrderQueryResponse()
             .ToListAsync();
 
-        int totalOrders = await _invoiceService.GetInvoices(userId, InvoiceState.Order).CountAsync();
+        int totalOrders = await filteredOrdersQuery.CountAsync();
 
         return orders.ToPaginationResult(totalOrders, page.Value);
     }
